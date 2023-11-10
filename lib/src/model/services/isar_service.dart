@@ -16,7 +16,7 @@ class IsarService {
   Future<void> saveVehicleDB(VehicleModel vehicle) async {
     final isar = await db;
 
-    await removeVehicleDB(vehicle); //Garantindo que o objeto a ser inserido será único
+    await removeVehicleDB(vehicle);
     await isar.writeTxn(() async => await isar.vehicleModels.put(vehicle));
   }
 
@@ -42,7 +42,7 @@ class IsarService {
   Future<void> saveParkingslotDB(ParkingSlotModel parkingslot) async {
     final isar = await db;
 
-    await removeParkingslotDB(parkingslot); //Garantindo que o objeto a ser inserido será único
+    await removeParkingslotDB(parkingslot);
     await isar.writeTxn(() async => await isar.parkingSlotModels.put(parkingslot));
   }
 
@@ -67,7 +67,7 @@ class IsarService {
   Future<void> saveVehicle(VehicleModel vehicle) async {
     final isar = await db;
 
-    await removeVehicleDB(vehicle); //Garantindo que o objeto a ser inserido será único
+    await removeVehicleDB(vehicle);
     await isar.writeTxn(() async => await isar.vehicleModels.put(vehicle));
   }
 
