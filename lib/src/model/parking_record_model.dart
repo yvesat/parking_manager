@@ -1,11 +1,11 @@
 import 'package:isar/isar.dart';
 
-part 'entry_exit_record_model.g.dart';
+part 'parking_record_model.g.dart';
 
 @collection
-class EntryExitRecordModel {
+class ParkingRecordModel {
   Id id = Isar.autoIncrement;
-
+  final int parkingRecordId;
   final int vehicleId;
   final String vehicleBrandModel;
   final String vehicleLicenePlate;
@@ -13,7 +13,8 @@ class EntryExitRecordModel {
   final DateTime entryTime;
   final DateTime? exitTime;
 
-  EntryExitRecordModel({
+  ParkingRecordModel({
+    required this.parkingRecordId,
     required this.vehicleId,
     required this.vehicleBrandModel,
     required this.vehicleLicenePlate,

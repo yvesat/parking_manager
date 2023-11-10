@@ -27,9 +27,9 @@ const ParkingSlotModelSchema = CollectionSchema(
       name: r'occupingVehicleId',
       type: IsarType.long,
     ),
-    r'slotId': PropertySchema(
+    r'parkingSlotId': PropertySchema(
       id: 2,
-      name: r'slotId',
+      name: r'parkingSlotId',
       type: IsarType.long,
     )
   },
@@ -64,7 +64,7 @@ void _parkingSlotModelSerialize(
 ) {
   writer.writeBool(offsets[0], object.isOccupied);
   writer.writeLong(offsets[1], object.occupingVehicleId);
-  writer.writeLong(offsets[2], object.slotId);
+  writer.writeLong(offsets[2], object.parkingSlotId);
 }
 
 ParkingSlotModel _parkingSlotModelDeserialize(
@@ -75,7 +75,7 @@ ParkingSlotModel _parkingSlotModelDeserialize(
 ) {
   final object = ParkingSlotModel(
     isOccupied: reader.readBool(offsets[0]),
-    slotId: reader.readLong(offsets[2]),
+    parkingSlotId: reader.readLong(offsets[2]),
   );
   object.id = id;
   object.occupingVehicleId = reader.readLongOrNull(offsets[1]);
@@ -335,45 +335,45 @@ extension ParkingSlotModelQueryFilter
   }
 
   QueryBuilder<ParkingSlotModel, ParkingSlotModel, QAfterFilterCondition>
-      slotIdEqualTo(int value) {
+      parkingSlotIdEqualTo(int value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'slotId',
+        property: r'parkingSlotId',
         value: value,
       ));
     });
   }
 
   QueryBuilder<ParkingSlotModel, ParkingSlotModel, QAfterFilterCondition>
-      slotIdGreaterThan(
+      parkingSlotIdGreaterThan(
     int value, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         include: include,
-        property: r'slotId',
+        property: r'parkingSlotId',
         value: value,
       ));
     });
   }
 
   QueryBuilder<ParkingSlotModel, ParkingSlotModel, QAfterFilterCondition>
-      slotIdLessThan(
+      parkingSlotIdLessThan(
     int value, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.lessThan(
         include: include,
-        property: r'slotId',
+        property: r'parkingSlotId',
         value: value,
       ));
     });
   }
 
   QueryBuilder<ParkingSlotModel, ParkingSlotModel, QAfterFilterCondition>
-      slotIdBetween(
+      parkingSlotIdBetween(
     int lower,
     int upper, {
     bool includeLower = true,
@@ -381,7 +381,7 @@ extension ParkingSlotModelQueryFilter
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
-        property: r'slotId',
+        property: r'parkingSlotId',
         lower: lower,
         includeLower: includeLower,
         upper: upper,
@@ -428,16 +428,16 @@ extension ParkingSlotModelQuerySortBy
   }
 
   QueryBuilder<ParkingSlotModel, ParkingSlotModel, QAfterSortBy>
-      sortBySlotId() {
+      sortByParkingSlotId() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'slotId', Sort.asc);
+      return query.addSortBy(r'parkingSlotId', Sort.asc);
     });
   }
 
   QueryBuilder<ParkingSlotModel, ParkingSlotModel, QAfterSortBy>
-      sortBySlotIdDesc() {
+      sortByParkingSlotIdDesc() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'slotId', Sort.desc);
+      return query.addSortBy(r'parkingSlotId', Sort.desc);
     });
   }
 }
@@ -486,16 +486,16 @@ extension ParkingSlotModelQuerySortThenBy
   }
 
   QueryBuilder<ParkingSlotModel, ParkingSlotModel, QAfterSortBy>
-      thenBySlotId() {
+      thenByParkingSlotId() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'slotId', Sort.asc);
+      return query.addSortBy(r'parkingSlotId', Sort.asc);
     });
   }
 
   QueryBuilder<ParkingSlotModel, ParkingSlotModel, QAfterSortBy>
-      thenBySlotIdDesc() {
+      thenByParkingSlotIdDesc() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'slotId', Sort.desc);
+      return query.addSortBy(r'parkingSlotId', Sort.desc);
     });
   }
 }
@@ -517,9 +517,9 @@ extension ParkingSlotModelQueryWhereDistinct
   }
 
   QueryBuilder<ParkingSlotModel, ParkingSlotModel, QDistinct>
-      distinctBySlotId() {
+      distinctByParkingSlotId() {
     return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'slotId');
+      return query.addDistinctBy(r'parkingSlotId');
     });
   }
 }
@@ -545,9 +545,10 @@ extension ParkingSlotModelQueryProperty
     });
   }
 
-  QueryBuilder<ParkingSlotModel, int, QQueryOperations> slotIdProperty() {
+  QueryBuilder<ParkingSlotModel, int, QQueryOperations>
+      parkingSlotIdProperty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'slotId');
+      return query.addPropertyName(r'parkingSlotId');
     });
   }
 }
