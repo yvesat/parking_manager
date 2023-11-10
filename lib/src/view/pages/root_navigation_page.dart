@@ -29,6 +29,8 @@ class RootNavigationPage extends StatelessWidget {
           NavigationDestination(label: 'Histórico', icon: FaIcon(FontAwesomeIcons.fileLines)),
         ],
         onDestinationSelected: _goBranch,
+        backgroundColor: Theme.of(context).colorScheme.secondaryContainer,
+        indicatorColor: Theme.of(context).colorScheme.primaryContainer,
       ),
     );
   }
