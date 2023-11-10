@@ -27,7 +27,6 @@ final router = GoRouter(
         StatefulShellBranch(
           navigatorKey: _shellNavigatorParkingSlotsKey,
           routes: [
-            // top route inside branch
             GoRoute(
               path: '/parkingSlots',
               pageBuilder: (context, state) => const NoTransitionPage(
@@ -39,7 +38,6 @@ final router = GoRouter(
         StatefulShellBranch(
           navigatorKey: _shellNavigatorParkingOccScreenKey,
           routes: [
-            // top route inside branch
             GoRoute(
               path: '/parkingOccupancy',
               pageBuilder: (context, state) => const NoTransitionPage(
@@ -51,7 +49,6 @@ final router = GoRouter(
         StatefulShellBranch(
           navigatorKey: _shellNavigatorRegistrationKey,
           routes: [
-            // top route inside branch
             GoRoute(
               path: '/registration',
               pageBuilder: (context, state) => const NoTransitionPage(
@@ -63,7 +60,7 @@ final router = GoRouter(
                   builder: (context, state) => const VehicleRegScreen(),
                 ),
                 GoRoute(
-                  path: 'pakingSlotReg',
+                  path: 'parkingSlotReg',
                   builder: (context, state) => const ParkingSlotRegScreen(),
                 ),
               ],
@@ -73,7 +70,6 @@ final router = GoRouter(
         StatefulShellBranch(
           navigatorKey: _shellNavigatorParkingHistoryKey,
           routes: [
-            // top route inside branch
             GoRoute(
               path: '/history',
               pageBuilder: (context, state) => const NoTransitionPage(
