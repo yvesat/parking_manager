@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class ParkingSlotTile extends ConsumerWidget {
+class ParkingSlotGridTile extends ConsumerWidget {
   // final String id;
-  const ParkingSlotTile({super.key});
+  const ParkingSlotGridTile({super.key});
   // const ParkingSlotTile({required this.id, super.key});
   @override
   Widget build(BuildContext context, WidgetRef ref) {
