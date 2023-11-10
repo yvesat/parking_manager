@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+import 'parking_slot_tile.dart';
+
 class ParkingSlotGrid extends HookConsumerWidget {
   const ParkingSlotGrid({super.key});
 
@@ -11,9 +13,9 @@ class ParkingSlotGrid extends HookConsumerWidget {
 
     return GridView.builder(
       shrinkWrap: true,
-      itemCount: 6,
+      itemCount: 18,
       // itemCount: productList.length,
-      itemBuilder: (ctx, i) => SizedBox(),
+      itemBuilder: (ctx, i) => const ParkingSlotTile(),
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
         childAspectRatio: 3 / 2,

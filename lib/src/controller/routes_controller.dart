@@ -4,6 +4,6 @@ import '../view/pages/home_page.dart';
 
 final router = GoRouter(
   routes: [
-    GoRoute(path: '/home', builder: (context, state) => const HomePage(), routes: []),
+    GoRoute(path: '/', builder: (context, state) => const HomePage(), routes: []),
   ],
 );

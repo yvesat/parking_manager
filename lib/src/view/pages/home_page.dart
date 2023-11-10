@@ -17,15 +17,11 @@ class _HomePageState extends ConsumerState<HomePage> {
         Scaffold(
           appBar: AppBar(
             centerTitle: true,
-            title: const Text('Onfly'),
+            title: const Text('Parking Manager'),
           ),
           body: const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16.0),
-            child: Column(
-              children: [
-                Expanded(child: ParkingSlotGrid()),
-              ],
-            ),
+            padding: EdgeInsets.all(12),
+            child: ParkingSlotGrid(),
           ),
         )
       ],
