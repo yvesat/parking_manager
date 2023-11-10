@@ -1,19 +1,30 @@
 name: parking_manager
 description: A new Flutter project.
-publish_to: 'none'
+publish_to: "none"
 version: 0.1.0
 
 environment:
-  sdk: '>=3.1.5 <4.0.0'
+  sdk: ">=3.1.5 <4.0.0"
 
 dependencies:
   flutter:
     sdk: flutter
 
+  flex_color_scheme: ^7.1.2
+  hooks_riverpod: ^2.3.6
+  path_provider: ^2.1.1
+  isar: ^3.1.0+1
+  isar_flutter_libs: ^3.1.0+1
+  collection: ^1.17.2
+  uuid: ^4.1.0
+  intl: ^0.18.1
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^2.0.0
+  isar_generator: 3.1.0+1
+  build_runner: any
 
 flutter:
   uses-material-design: true
