@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+import '../../../controller/vehicle_controller.dart';
+import '../../widgets/alert.dart';
+
 class VehicleRegPage extends ConsumerStatefulWidget {
-  const VehicleRegPage({super.key});
+  const VehicleRegPage({Key? key}) : super(key: key);
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _VehicleRegistrationPageState();
@@ -11,12 +14,15 @@ class VehicleRegPage extends ConsumerStatefulWidget {
 
 class _VehicleRegistrationPageState extends ConsumerState<VehicleRegPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  String? brand;
-  String? model;
-  String? licensePlate;
+  final TextEditingController _brandController = TextEditingController();
+  final TextEditingController _modelController = TextEditingController();
+  final TextEditingController _licensePlateController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
+    final Alert alert = Alert();
+    final vehicleController = ref.read(vehicleControllerProvider.notifier);
+
     return WillPopScope(
       onWillPop: _onWillPop,
       child: Scaffold(
@@ -39,6 +45,7 @@ class _VehicleRegistrationPageState extends ConsumerState<VehicleRegPage> {
                   ),
                 ),
                 TextFormField(
+                  controller: _brandController,
                   decoration: InputDecoration(
                     icon: FaIcon(
                       FontAwesomeIcons.industry,
@@ -46,11 +53,6 @@ class _VehicleRegistrationPageState extends ConsumerState<VehicleRegPage> {
                     ),
                     labelText: 'Marca',
                   ),
-                  onChanged: (value) {
-                    setState(() {
-                      brand = value;
-                    });
-                  },
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Brand is required';
@@ -59,6 +61,7 @@ class _VehicleRegistrationPageState extends ConsumerState<VehicleRegPage> {
                   },
                 ),
                 TextFormField(
+                  controller: _modelController,
                   decoration: InputDecoration(
                     icon: FaIcon(
                       FontAwesomeIcons.car,
@@ -66,11 +69,6 @@ class _VehicleRegistrationPageState extends ConsumerState<VehicleRegPage> {
                     ),
                     labelText: 'Modelo',
                   ),
-                  onChanged: (value) {
-                    setState(() {
-                      model = value;
-                    });
-                  },
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Model is required';
@@ -79,6 +77,7 @@ class _VehicleRegistrationPageState extends ConsumerState<VehicleRegPage> {
                   },
                 ),
                 TextFormField(
+                  controller: _licensePlateController,
                   decoration: InputDecoration(
                     icon: FaIcon(
                       FontAwesomeIcons.circleInfo,
@@ -86,11 +85,6 @@ class _VehicleRegistrationPageState extends ConsumerState<VehicleRegPage> {
                     ),
                     labelText: 'Placa',
                   ),
-                  onChanged: (value) {
-                    setState(() {
-                      licensePlate = value;
-                    });
-                  },
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'License Plate is required';
@@ -100,13 +94,21 @@ class _VehicleRegistrationPageState extends ConsumerState<VehicleRegPage> {
                 ),
                 const SizedBox(height: 20),
                 ElevatedButton(
-                  onPressed: () {
+                  onPressed: () async {
                     if (_formKey.currentState!.validate()) {
-                      // Perform actions when the form is valid
-                      // For example, you can save the data or navigate to the next screen
+                      await vehicleController.createVehicle(context, ref, _brandController.text, _modelController.text, _licensePlateController.text);
+
+                      _brandController.clear();
+                      _modelController.clear();
+                      _licensePlateController.clear();
+                    } else {
+                      alert.snack(context, "Favor preencher todos os dados.");
                     }
                   },
-                  child: const Text('Submit'),
+                  child: const Padding(
+                    padding: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                    child: Text('Salvar Veículo'),
+                  ),
                 ),
               ],
             ),
