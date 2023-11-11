@@ -6,8 +6,8 @@ import 'package:parking_manager/src/model/parking_slot_model.dart';
 import '../model/services/isar_service.dart';
 import '../view/widgets/alert.dart';
 
-class CartController extends StateNotifier<AsyncValue<void>> {
-  CartController() : super(const AsyncValue.data(null));
+class ParkingSlotController extends StateNotifier<AsyncValue<void>> {
+  ParkingSlotController() : super(const AsyncValue.data(null));
 
   final Alert alert = Alert();
   final IsarService isarService = IsarService();
@@ -59,4 +59,4 @@ class CartController extends StateNotifier<AsyncValue<void>> {
   }
 }
 
-final parkingSlotController = StateNotifierProvider<CartController, AsyncValue<void>>((ref) => CartController());
+final parkingSlotController = StateNotifierProvider<ParkingSlotController, AsyncValue<void>>((ref) => ParkingSlotController());
