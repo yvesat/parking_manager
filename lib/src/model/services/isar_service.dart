@@ -64,13 +64,6 @@ class IsarService {
     if (parkingSlotToDelete != null) await isar.writeTxn(() async => await isar.parkingSlotModels.delete(parkingSlotToDelete.id));
   }
 
-  Future<void> saveVehicle(VehicleModel vehicle) async {
-    final isar = await db;
-
-    await removeVehicleDB(vehicle);
-    await isar.writeTxn(() async => await isar.vehicleModels.put(vehicle));
-  }
-
   //Parking Record database opertaions
   Future<ParkingRecordModel?> getParkingRecordByIdDB(int parkingRecordId) async {
     final isar = await db;
