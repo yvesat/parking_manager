@@ -43,9 +43,13 @@ class VehicleModel {
 class VehicleModelNotifier extends StateNotifier<List<VehicleModel>> {
   VehicleModelNotifier() : super([]);
 
-  VehicleModel createVehicle(int vehicleId, String brand, String model, String licensePlate) {
+  VehicleModel createVehicle(String brand, String model, String licensePlate) {
+    final lastVehicle = state.lastOrNull;
+
+    final newVehicleId = lastVehicle != null ? lastVehicle.vehicleId + 1 : 1;
+
     final newVehicle = VehicleModel(
-      vehicleId: vehicleId,
+      vehicleId: newVehicleId,
       brand: brand,
       model: model,
       licensePlate: licensePlate,
