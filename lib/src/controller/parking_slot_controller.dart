@@ -17,12 +17,10 @@ class CartController extends StateNotifier<AsyncValue<void>> {
       state = const AsyncValue.loading();
 
       final parkingSlotState = ref.read(parkingSlotProvider.notifier);
-
       final newParkingSlot = parkingSlotState.createParkingSlot();
-
       await isarService.saveParkingslotDB(newParkingSlot);
 
-      alert.snack(context, "Vaga ${newParkingSlot.parkingSlotId} criada!");
+      alert.snack(context, "Vaga ${newParkingSlot.parkingSlotNumber} criada!");
     } catch (e) {
       alert.snack(context, e.toString());
     } finally {
@@ -30,17 +28,29 @@ class CartController extends StateNotifier<AsyncValue<void>> {
     }
   }
 
+  ParkingSlotModel? getParkingSlot(WidgetRef ref, BuildContext context, int id) {
+    try {
+      return ref.watch(parkingSlotProvider.notifier).getParkingSlot(id);
+    } catch (e) {
+      return null;
+    }
+  }
+
+  List<ParkingSlotModel> getParkingSlotState(WidgetRef ref) {
+    return ref.watch(parkingSlotProvider);
+  }
+
   Future<void> removeParkingSlot(BuildContext context, WidgetRef ref, ParkingSlotModel parkingSlot) async {
     try {
       state = const AsyncValue.loading();
-      final idRemovedParkingSlot = parkingSlot.parkingSlotId;
+      final removedParkingSlotNumber = parkingSlot.parkingSlotNumber;
       final parkingSlotState = ref.read(parkingSlotProvider.notifier);
 
       parkingSlotState.removeParkingSlot(parkingSlot);
 
-      await isarService.removeParkingslotDB(parkingSlot);
+      await isarService.removeParkingSlotDB(parkingSlot);
 
-      alert.snack(context, "Vaga $idRemovedParkingSlot removida!");
+      alert.snack(context, "Vaga $removedParkingSlotNumber removida!"); //TODO: Corrigir
     } catch (e) {
       alert.snack(context, e.toString());
     } finally {
@@ -49,4 +59,4 @@ class CartController extends StateNotifier<AsyncValue<void>> {
   }
 }
 
-final cartControllerProvider = StateNotifierProvider<CartController, AsyncValue<void>>((ref) => CartController());
+final parkingSlotController = StateNotifierProvider<CartController, AsyncValue<void>>((ref) => CartController());
