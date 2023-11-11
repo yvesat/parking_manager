@@ -57,11 +57,11 @@ final router = GoRouter(
               routes: [
                 GoRoute(
                   path: 'vehicleReg',
-                  builder: (context, state) => const VehicleRegScreen(),
+                  builder: (context, state) => const VehicleRegPage(),
                 ),
                 GoRoute(
                   path: 'parkingSlotReg',
-                  builder: (context, state) => const ParkingSlotRegScreen(),
+                  builder: (context, state) => const ParkingSlotRegPage(),
                 ),
               ],
             ),

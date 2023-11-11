@@ -5,8 +5,8 @@ import 'package:parking_manager/src/view/widgets/parking_slot_reg_tile.dart';
 
 import '../../../controller/parking_slot_controller.dart';
 
-class ParkingSlotRegScreen extends ConsumerWidget {
-  const ParkingSlotRegScreen({super.key});
+class ParkingSlotRegPage extends ConsumerWidget {
+  const ParkingSlotRegPage({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -17,7 +17,7 @@ class ParkingSlotRegScreen extends ConsumerWidget {
         centerTitle: true,
         title: const Text('Cadastro de Vagas'),
         actions: [
-          IconButton.filled(
+          IconButton(
             onPressed: () => parkingController.createParkingSlot(context, ref),
             icon: const FaIcon(
               FontAwesomeIcons.plus,

@@ -44,8 +44,8 @@ class ParkingSlotModelNotifier extends StateNotifier<List<ParkingSlotModel>> {
     return newParkingSlot;
   }
 
-  ParkingSlotModel? getParkingSlot(int id) {
-    return state.firstWhereOrNull((e) => e.parkingSlotNumber == id);
+  ParkingSlotModel? getParkingSlot(int parkingSlotNumber) {
+    return state.firstWhereOrNull((e) => e.parkingSlotNumber == parkingSlotNumber);
   }
 
   void editOccupyingvehicle(ParkingSlotModel parkingSlot, int? occupyingVehicleId) {
