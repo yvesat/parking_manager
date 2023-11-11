@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:isar/isar.dart';
 
@@ -6,26 +7,26 @@ part 'parking_slot_model.g.dart';
 @collection
 class ParkingSlotModel {
   Id id = Isar.autoIncrement;
-  final int parkingSlotId;
+  final int parkingSlotNumber;
   int? occupyingVehicleId;
 
-  ParkingSlotModel({required this.parkingSlotId, this.occupyingVehicleId});
+  ParkingSlotModel({required this.parkingSlotNumber, this.occupyingVehicleId});
 
   ParkingSlotModel copyWith({
-    int? parkingSlotId,
-    int? occupingVehicleId,
+    int? parkingSlotNumber,
+    int? occupyingVehicleId,
   }) {
     return ParkingSlotModel(
-      parkingSlotId: parkingSlotId ?? this.parkingSlotId,
-      occupyingVehicleId: occupingVehicleId ?? occupyingVehicleId,
+      parkingSlotNumber: parkingSlotNumber ?? this.parkingSlotNumber,
+      occupyingVehicleId: occupyingVehicleId ?? this.occupyingVehicleId,
     );
   }
 
   @override
-  bool operator ==(Object other) => identical(this, other) || other is ParkingSlotModel && runtimeType == other.runtimeType && parkingSlotId == other.parkingSlotId && occupyingVehicleId == other.occupyingVehicleId;
+  bool operator ==(Object other) => identical(this, other) || other is ParkingSlotModel && runtimeType == other.runtimeType && parkingSlotNumber == other.parkingSlotNumber && occupyingVehicleId == other.occupyingVehicleId;
 
   @override
-  int get hashCode => parkingSlotId.hashCode ^ occupyingVehicleId.hashCode;
+  int get hashCode => parkingSlotNumber.hashCode ^ occupyingVehicleId.hashCode;
 }
 
 class ParkingSlotModelNotifier extends StateNotifier<List<ParkingSlotModel>> {
@@ -34,24 +35,28 @@ class ParkingSlotModelNotifier extends StateNotifier<List<ParkingSlotModel>> {
   ParkingSlotModel createParkingSlot() {
     final lastParkingSlot = state.lastOrNull;
 
-    final newParkingSlotID = lastParkingSlot != null ? lastParkingSlot.id + 1 : 1;
+    final newParkingSlotNumber = lastParkingSlot != null ? lastParkingSlot.parkingSlotNumber + 1 : 1;
 
-    final newParkingSlot = ParkingSlotModel(parkingSlotId: newParkingSlotID);
+    final newParkingSlot = ParkingSlotModel(parkingSlotNumber: newParkingSlotNumber);
 
     state = [...state, newParkingSlot];
 
     return newParkingSlot;
   }
 
+  ParkingSlotModel? getParkingSlot(int id) {
+    return state.firstWhereOrNull((e) => e.parkingSlotNumber == id);
+  }
+
   void editOccupyingvehicle(ParkingSlotModel parkingSlot, int? occupyingVehicleId) {
     state = [
       for (final parkingSlotState in state)
-        if (parkingSlotState.id == parkingSlot.id) parkingSlotState.copyWith(occupingVehicleId: occupyingVehicleId) else parkingSlotState,
+        if (parkingSlotState.parkingSlotNumber == parkingSlot.parkingSlotNumber) parkingSlotState.copyWith(occupyingVehicleId: occupyingVehicleId) else parkingSlotState,
     ];
   }
 
   void removeParkingSlot(ParkingSlotModel parkingSlot) {
-    state = state.where((e) => e != parkingSlot).toList();
+    state = state.where((e) => e.parkingSlotNumber != parkingSlot.parkingSlotNumber).toList();
   }
 }
 

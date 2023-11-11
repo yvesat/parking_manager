@@ -42,13 +42,13 @@ class IsarService {
   Future<void> saveParkingslotDB(ParkingSlotModel parkingslot) async {
     final isar = await db;
 
-    await removeParkingslotDB(parkingslot);
+    await removeParkingSlotDB(parkingslot);
     await isar.writeTxn(() async => await isar.parkingSlotModels.put(parkingslot));
   }
 
   Future<ParkingSlotModel?> getPakingsSlotByIdDB(int parkingSlotId) async {
     final isar = await db;
-    ParkingSlotModel? parkingSlot = await isar.parkingSlotModels.filter().parkingSlotIdEqualTo(parkingSlotId).findFirst();
+    ParkingSlotModel? parkingSlot = await isar.parkingSlotModels.filter().parkingSlotNumberEqualTo(parkingSlotId).findFirst();
     return parkingSlot;
   }
 
@@ -57,10 +57,10 @@ class IsarService {
     return isar.parkingSlotModels.where().findAll();
   }
 
-  Future<void> removeParkingslotDB(ParkingSlotModel parkingslot) async {
+  Future<void> removeParkingSlotDB(ParkingSlotModel parkingslot) async {
     final isar = await db;
 
-    final parkingSlotToDelete = await isar.parkingSlotModels.filter().parkingSlotIdEqualTo(parkingslot.parkingSlotId).findFirst();
+    final parkingSlotToDelete = await isar.parkingSlotModels.filter().parkingSlotNumberEqualTo(parkingslot.parkingSlotNumber).findFirst();
     if (parkingSlotToDelete != null) await isar.writeTxn(() async => await isar.parkingSlotModels.delete(parkingSlotToDelete.id));
   }
 
