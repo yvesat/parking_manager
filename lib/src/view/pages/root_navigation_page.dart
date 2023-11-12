@@ -23,9 +23,9 @@ class RootNavigationPage extends StatelessWidget {
       bottomNavigationBar: NavigationBar(
         selectedIndex: navigationShell.currentIndex,
         destinations: const [
-          NavigationDestination(label: 'Vagas', icon: FaIcon(FontAwesomeIcons.squareParking)),
           NavigationDestination(label: 'Controle', icon: FaIcon(FontAwesomeIcons.rightLeft)),
-          NavigationDestination(label: 'Cadastro', icon: FaIcon(FontAwesomeIcons.pen)),
+          NavigationDestination(label: 'Vagas', icon: FaIcon(FontAwesomeIcons.squareParking)),
+          NavigationDestination(label: 'Veículos', icon: FaIcon(FontAwesomeIcons.car)),
           NavigationDestination(label: 'Histórico', icon: FaIcon(FontAwesomeIcons.fileLines)),
         ],
         onDestinationSelected: _goBranch,
