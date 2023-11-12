@@ -8,17 +8,20 @@ part 'parking_slot_model.g.dart';
 class ParkingSlotModel {
   Id id = Isar.autoIncrement;
   final int parkingSlotNumber;
-  int? occupyingVehicleId;
+  final int? occupyingVehicleId;
+  final bool available;
 
-  ParkingSlotModel({required this.parkingSlotNumber, this.occupyingVehicleId});
+  ParkingSlotModel({required this.parkingSlotNumber, this.occupyingVehicleId, this.available = true});
 
   ParkingSlotModel copyWith({
     int? parkingSlotNumber,
     int? occupyingVehicleId,
+    bool? available,
   }) {
     return ParkingSlotModel(
       parkingSlotNumber: parkingSlotNumber ?? this.parkingSlotNumber,
       occupyingVehicleId: occupyingVehicleId ?? this.occupyingVehicleId,
+      available: available ?? this.available,
     );
   }
 
@@ -51,7 +54,13 @@ class ParkingSlotModelNotifier extends StateNotifier<List<ParkingSlotModel>> {
   void editOccupyingvehicle(ParkingSlotModel parkingSlot, int? occupyingVehicleId) {
     state = [
       for (final parkingSlotState in state)
-        if (parkingSlotState.parkingSlotNumber == parkingSlot.parkingSlotNumber) parkingSlotState.copyWith(occupyingVehicleId: occupyingVehicleId) else parkingSlotState,
+        if (parkingSlotState.parkingSlotNumber == parkingSlot.parkingSlotNumber)
+          parkingSlotState.copyWith(
+            occupyingVehicleId: occupyingVehicleId,
+            available: occupyingVehicleId != null ? false : true,
+          )
+        else
+          parkingSlotState,
     ];
   }
 
