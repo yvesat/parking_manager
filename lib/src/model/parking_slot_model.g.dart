@@ -17,18 +17,23 @@ const ParkingSlotModelSchema = CollectionSchema(
   name: r'ParkingSlotModel',
   id: 4956515367755463656,
   properties: {
-    r'hashCode': PropertySchema(
+    r'available': PropertySchema(
       id: 0,
+      name: r'available',
+      type: IsarType.bool,
+    ),
+    r'hashCode': PropertySchema(
+      id: 1,
       name: r'hashCode',
       type: IsarType.long,
     ),
     r'occupyingVehicleId': PropertySchema(
-      id: 1,
+      id: 2,
       name: r'occupyingVehicleId',
       type: IsarType.long,
     ),
     r'parkingSlotNumber': PropertySchema(
-      id: 2,
+      id: 3,
       name: r'parkingSlotNumber',
       type: IsarType.long,
     )
@@ -62,9 +67,10 @@ void _parkingSlotModelSerialize(
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
-  writer.writeLong(offsets[0], object.hashCode);
-  writer.writeLong(offsets[1], object.occupyingVehicleId);
-  writer.writeLong(offsets[2], object.parkingSlotNumber);
+  writer.writeBool(offsets[0], object.available);
+  writer.writeLong(offsets[1], object.hashCode);
+  writer.writeLong(offsets[2], object.occupyingVehicleId);
+  writer.writeLong(offsets[3], object.parkingSlotNumber);
 }
 
 ParkingSlotModel _parkingSlotModelDeserialize(
@@ -74,8 +80,9 @@ ParkingSlotModel _parkingSlotModelDeserialize(
   Map<Type, List<int>> allOffsets,
 ) {
   final object = ParkingSlotModel(
-    occupyingVehicleId: reader.readLongOrNull(offsets[1]),
-    parkingSlotNumber: reader.readLong(offsets[2]),
+    available: reader.readBoolOrNull(offsets[0]) ?? true,
+    occupyingVehicleId: reader.readLongOrNull(offsets[2]),
+    parkingSlotNumber: reader.readLong(offsets[3]),
   );
   object.id = id;
   return object;
@@ -89,10 +96,12 @@ P _parkingSlotModelDeserializeProp<P>(
 ) {
   switch (propertyId) {
     case 0:
-      return (reader.readLong(offset)) as P;
+      return (reader.readBoolOrNull(offset) ?? true) as P;
     case 1:
-      return (reader.readLongOrNull(offset)) as P;
+      return (reader.readLong(offset)) as P;
     case 2:
+      return (reader.readLongOrNull(offset)) as P;
+    case 3:
       return (reader.readLong(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -193,6 +202,16 @@ extension ParkingSlotModelQueryWhere
 
 extension ParkingSlotModelQueryFilter
     on QueryBuilder<ParkingSlotModel, ParkingSlotModel, QFilterCondition> {
+  QueryBuilder<ParkingSlotModel, ParkingSlotModel, QAfterFilterCondition>
+      availableEqualTo(bool value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'available',
+        value: value,
+      ));
+    });
+  }
+
   QueryBuilder<ParkingSlotModel, ParkingSlotModel, QAfterFilterCondition>
       hashCodeEqualTo(int value) {
     return QueryBuilder.apply(this, (query) {
@@ -445,6 +464,20 @@ extension ParkingSlotModelQueryLinks
 extension ParkingSlotModelQuerySortBy
     on QueryBuilder<ParkingSlotModel, ParkingSlotModel, QSortBy> {
   QueryBuilder<ParkingSlotModel, ParkingSlotModel, QAfterSortBy>
+      sortByAvailable() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'available', Sort.asc);
+    });
+  }
+
+  QueryBuilder<ParkingSlotModel, ParkingSlotModel, QAfterSortBy>
+      sortByAvailableDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'available', Sort.desc);
+    });
+  }
+
+  QueryBuilder<ParkingSlotModel, ParkingSlotModel, QAfterSortBy>
       sortByHashCode() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'hashCode', Sort.asc);
@@ -489,6 +522,20 @@ extension ParkingSlotModelQuerySortBy
 
 extension ParkingSlotModelQuerySortThenBy
     on QueryBuilder<ParkingSlotModel, ParkingSlotModel, QSortThenBy> {
+  QueryBuilder<ParkingSlotModel, ParkingSlotModel, QAfterSortBy>
+      thenByAvailable() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'available', Sort.asc);
+    });
+  }
+
+  QueryBuilder<ParkingSlotModel, ParkingSlotModel, QAfterSortBy>
+      thenByAvailableDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'available', Sort.desc);
+    });
+  }
+
   QueryBuilder<ParkingSlotModel, ParkingSlotModel, QAfterSortBy>
       thenByHashCode() {
     return QueryBuilder.apply(this, (query) {
@@ -548,6 +595,13 @@ extension ParkingSlotModelQuerySortThenBy
 extension ParkingSlotModelQueryWhereDistinct
     on QueryBuilder<ParkingSlotModel, ParkingSlotModel, QDistinct> {
   QueryBuilder<ParkingSlotModel, ParkingSlotModel, QDistinct>
+      distinctByAvailable() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'available');
+    });
+  }
+
+  QueryBuilder<ParkingSlotModel, ParkingSlotModel, QDistinct>
       distinctByHashCode() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'hashCode');
@@ -574,6 +628,12 @@ extension ParkingSlotModelQueryProperty
   QueryBuilder<ParkingSlotModel, int, QQueryOperations> idProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'id');
+    });
+  }
+
+  QueryBuilder<ParkingSlotModel, bool, QQueryOperations> availableProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'available');
     });
   }
 
