@@ -9,10 +9,10 @@ class VehicleRegPage extends ConsumerStatefulWidget {
   const VehicleRegPage({Key? key}) : super(key: key);
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _VehicleRegistrationPageState();
+  ConsumerState<ConsumerStatefulWidget> createState() => _VehicleRegPageState();
 }
 
-class _VehicleRegistrationPageState extends ConsumerState<VehicleRegPage> {
+class _VehicleRegPageState extends ConsumerState<VehicleRegPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _brandController = TextEditingController();
   final TextEditingController _modelController = TextEditingController();
@@ -55,7 +55,7 @@ class _VehicleRegistrationPageState extends ConsumerState<VehicleRegPage> {
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Brand is required';
+                      return 'Informe a marca';
                     }
                     return null;
                   },
@@ -71,7 +71,7 @@ class _VehicleRegistrationPageState extends ConsumerState<VehicleRegPage> {
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Model is required';
+                      return 'Informe o modelo';
                     }
                     return null;
                   },
@@ -87,7 +87,7 @@ class _VehicleRegistrationPageState extends ConsumerState<VehicleRegPage> {
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'License Plate is required';
+                      return 'Informe a placa do veículo';
                     }
                     return null;
                   },
@@ -96,7 +96,7 @@ class _VehicleRegistrationPageState extends ConsumerState<VehicleRegPage> {
                 ElevatedButton(
                   onPressed: () async {
                     if (_formKey.currentState!.validate()) {
-                      await vehicleController.createVehicle(context, ref, _brandController.text, _modelController.text, _licensePlateController.text);
+                      await vehicleController.createVehicle(context, ref, _brandController.text, _modelController.text, _licensePlateController.text.toUpperCase());
 
                       _brandController.clear();
                       _modelController.clear();
@@ -119,8 +119,7 @@ class _VehicleRegistrationPageState extends ConsumerState<VehicleRegPage> {
   }
 
   Future<bool> _onWillPop() async {
-    // Add your custom logic here, e.g., show a dialog
-    // Return true to allow popping, or false to prevent it.
+    //TODO: Verificar se há alterações pendentes
     return true;
   }
 }
