@@ -10,7 +10,7 @@ class ParkingSlotRegPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final parkingController = ref.read(parkingSlotController.notifier);
+    final parkingController = ref.read(parkingSlotControllerProvider.notifier);
     final parkingState = parkingController.getParkingSlotState(ref);
     return Scaffold(
       appBar: AppBar(

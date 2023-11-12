@@ -4,7 +4,7 @@ import 'package:parking_manager/src/view/pages/registration_pages/vehicle_reg_pa
 
 import '../view/pages/parking_history_page.dart';
 import '../view/pages/parking_occ_page.dart';
-import '../view/pages/parking_slots_page.dart';
+import '../view/pages/parking_slots_grid_page.dart';
 import '../view/pages/registration_page.dart';
 import '../view/pages/registration_pages/parking_slot_reg_page.dart';
 import '../view/pages/root_navigation_page.dart';
@@ -30,7 +30,7 @@ final router = GoRouter(
             GoRoute(
               path: '/parkingSlots',
               pageBuilder: (context, state) => const NoTransitionPage(
-                child: ParkingSlotsPage(),
+                child: ParkingSlotsGridPage(),
               ),
             ),
           ],
@@ -39,32 +39,40 @@ final router = GoRouter(
           navigatorKey: _shellNavigatorParkingOccScreenKey,
           routes: [
             GoRoute(
-              path: '/parkingOccupancy',
-              pageBuilder: (context, state) => const NoTransitionPage(
-                child: ParkingOccPage(),
-              ),
+              path: '/parkingSlotReg',
+              builder: (context, state) => const ParkingSlotRegPage(),
             ),
+            // GoRoute(
+            //   path: '/parkingOccupancy',
+            //   pageBuilder: (context, state) => const NoTransitionPage(
+            //     child: ParkingOccPage(),
+            //   ),
+            // ),
           ],
         ),
         StatefulShellBranch(
           navigatorKey: _shellNavigatorRegistrationKey,
           routes: [
             GoRoute(
-              path: '/registration',
-              pageBuilder: (context, state) => const NoTransitionPage(
-                child: RegistrationPage(),
-              ),
-              routes: [
-                GoRoute(
-                  path: 'vehicleReg',
-                  builder: (context, state) => const VehicleRegPage(),
-                ),
-                GoRoute(
-                  path: 'parkingSlotReg',
-                  builder: (context, state) => const ParkingSlotRegPage(),
-                ),
-              ],
+              path: '/vehicleReg',
+              builder: (context, state) => const VehicleRegPage(),
             ),
+            // GoRoute(
+            //   path: '/registration',
+            //   pageBuilder: (context, state) => const NoTransitionPage(
+            //     child: RegistrationPage(),
+            //   ),
+            //   routes: [
+            //     GoRoute(
+            //       path: 'vehicleReg',
+            //       builder: (context, state) => const VehicleRegPage(),
+            //     ),
+            //     GoRoute(
+            //       path: 'parkingSlotReg',
+            //       builder: (context, state) => const ParkingSlotRegPage(),
+            //     ),
+            //   ],
+            // ),
           ],
         ),
         StatefulShellBranch(

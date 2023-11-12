@@ -9,8 +9,8 @@ class ParkingSlotRegTile extends HookConsumerWidget {
   const ParkingSlotRegTile({required this.parkingSlotId, super.key});
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final parkingController = ref.read(parkingSlotController.notifier);
-    final parkingSlot = parkingController.getParkingSlot(ref, context, parkingSlotId);
+    final parkingController = ref.read(parkingSlotControllerProvider.notifier);
+    final parkingSlot = parkingController.getParkingSlot(ref, parkingSlotId);
     final parkingSlotAvailable = parkingSlot!.occupyingVehicleId != null ? false : true;
 
     return Card(

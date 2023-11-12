@@ -28,7 +28,7 @@ class ParkingSlotController extends StateNotifier<AsyncValue<void>> {
     }
   }
 
-  ParkingSlotModel? getParkingSlot(WidgetRef ref, BuildContext context, int id) {
+  ParkingSlotModel? getParkingSlot(WidgetRef ref, int id) {
     try {
       return ref.watch(parkingSlotProvider.notifier).getParkingSlot(id);
     } catch (e) {
@@ -59,4 +59,4 @@ class ParkingSlotController extends StateNotifier<AsyncValue<void>> {
   }
 }
 
-final parkingSlotController = StateNotifierProvider<ParkingSlotController, AsyncValue<void>>((ref) => ParkingSlotController());
+final parkingSlotControllerProvider = StateNotifierProvider<ParkingSlotController, AsyncValue<void>>((ref) => ParkingSlotController());
