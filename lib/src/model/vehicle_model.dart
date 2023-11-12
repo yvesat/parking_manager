@@ -64,6 +64,21 @@ class VehicleModelNotifier extends StateNotifier<List<VehicleModel>> {
     return state.firstWhereOrNull((e) => e.vehicleId == vehicleId);
   }
 
+  List<String> getLicensePlateList() {
+    List<String> licensePlateList = [];
+
+    for (final vehicle in state) {
+      licensePlateList.add(vehicle.licensePlate);
+    }
+
+    return licensePlateList;
+  }
+
+  VehicleModel? searchVehicleByLP(String licensePlate) {
+    final normalizedSearch = licensePlate.toUpperCase();
+    return state.firstWhereOrNull((e) => e.licensePlate == normalizedSearch);
+  }
+
   List<VehicleModel> getVehicleState() {
     return state;
   }

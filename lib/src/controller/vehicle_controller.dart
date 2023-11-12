@@ -28,8 +28,9 @@ class VehicleController extends StateNotifier<AsyncValue<void>> {
     }
   }
 
-  VehicleModel? getVehicle(WidgetRef ref, BuildContext context, int vehicleId) {
+  VehicleModel? getVehicle(WidgetRef ref, int? vehicleId) {
     try {
+      if (vehicleId == null) return null;
       return ref.watch(vehicleProvider.notifier).getVehicle(vehicleId);
     } catch (e) {
       return null;
@@ -38,6 +39,14 @@ class VehicleController extends StateNotifier<AsyncValue<void>> {
 
   List<VehicleModel> getVehicleState(WidgetRef ref) {
     return ref.watch(vehicleProvider);
+  }
+
+  List<String> getLicensePlateList(WidgetRef ref) {
+    return ref.watch(vehicleProvider.notifier).getLicensePlateList();
+  }
+
+  VehicleModel? searchVehicleByLP(WidgetRef ref, String licensePlate) {
+    return ref.watch(vehicleProvider.notifier).searchVehicleByLP(licensePlate);
   }
 
   Future<void> removeParkingSlot(BuildContext context, WidgetRef ref, VehicleModel vehicle) async {

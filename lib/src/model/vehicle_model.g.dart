@@ -22,18 +22,23 @@ const VehicleModelSchema = CollectionSchema(
       name: r'brand',
       type: IsarType.string,
     ),
-    r'licensePlate': PropertySchema(
+    r'hashCode': PropertySchema(
       id: 1,
+      name: r'hashCode',
+      type: IsarType.long,
+    ),
+    r'licensePlate': PropertySchema(
+      id: 2,
       name: r'licensePlate',
       type: IsarType.string,
     ),
     r'model': PropertySchema(
-      id: 2,
+      id: 3,
       name: r'model',
       type: IsarType.string,
     ),
     r'vehicleId': PropertySchema(
-      id: 3,
+      id: 4,
       name: r'vehicleId',
       type: IsarType.long,
     )
@@ -71,9 +76,10 @@ void _vehicleModelSerialize(
   Map<Type, List<int>> allOffsets,
 ) {
   writer.writeString(offsets[0], object.brand);
-  writer.writeString(offsets[1], object.licensePlate);
-  writer.writeString(offsets[2], object.model);
-  writer.writeLong(offsets[3], object.vehicleId);
+  writer.writeLong(offsets[1], object.hashCode);
+  writer.writeString(offsets[2], object.licensePlate);
+  writer.writeString(offsets[3], object.model);
+  writer.writeLong(offsets[4], object.vehicleId);
 }
 
 VehicleModel _vehicleModelDeserialize(
@@ -84,9 +90,9 @@ VehicleModel _vehicleModelDeserialize(
 ) {
   final object = VehicleModel(
     brand: reader.readString(offsets[0]),
-    licensePlate: reader.readString(offsets[1]),
-    model: reader.readString(offsets[2]),
-    vehicleId: reader.readLong(offsets[3]),
+    licensePlate: reader.readString(offsets[2]),
+    model: reader.readString(offsets[3]),
+    vehicleId: reader.readLong(offsets[4]),
   );
   object.id = id;
   return object;
@@ -102,10 +108,12 @@ P _vehicleModelDeserializeProp<P>(
     case 0:
       return (reader.readString(offset)) as P;
     case 1:
-      return (reader.readString(offset)) as P;
+      return (reader.readLong(offset)) as P;
     case 2:
       return (reader.readString(offset)) as P;
     case 3:
+      return (reader.readString(offset)) as P;
+    case 4:
       return (reader.readLong(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -336,6 +344,62 @@ extension VehicleModelQueryFilter
       return query.addFilterCondition(FilterCondition.greaterThan(
         property: r'brand',
         value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<VehicleModel, VehicleModel, QAfterFilterCondition>
+      hashCodeEqualTo(int value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'hashCode',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<VehicleModel, VehicleModel, QAfterFilterCondition>
+      hashCodeGreaterThan(
+    int value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'hashCode',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<VehicleModel, VehicleModel, QAfterFilterCondition>
+      hashCodeLessThan(
+    int value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'hashCode',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<VehicleModel, VehicleModel, QAfterFilterCondition>
+      hashCodeBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'hashCode',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
       ));
     });
   }
@@ -740,6 +804,18 @@ extension VehicleModelQuerySortBy
     });
   }
 
+  QueryBuilder<VehicleModel, VehicleModel, QAfterSortBy> sortByHashCode() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'hashCode', Sort.asc);
+    });
+  }
+
+  QueryBuilder<VehicleModel, VehicleModel, QAfterSortBy> sortByHashCodeDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'hashCode', Sort.desc);
+    });
+  }
+
   QueryBuilder<VehicleModel, VehicleModel, QAfterSortBy> sortByLicensePlate() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'licensePlate', Sort.asc);
@@ -789,6 +865,18 @@ extension VehicleModelQuerySortThenBy
   QueryBuilder<VehicleModel, VehicleModel, QAfterSortBy> thenByBrandDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'brand', Sort.desc);
+    });
+  }
+
+  QueryBuilder<VehicleModel, VehicleModel, QAfterSortBy> thenByHashCode() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'hashCode', Sort.asc);
+    });
+  }
+
+  QueryBuilder<VehicleModel, VehicleModel, QAfterSortBy> thenByHashCodeDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'hashCode', Sort.desc);
     });
   }
 
@@ -851,6 +939,12 @@ extension VehicleModelQueryWhereDistinct
     });
   }
 
+  QueryBuilder<VehicleModel, VehicleModel, QDistinct> distinctByHashCode() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'hashCode');
+    });
+  }
+
   QueryBuilder<VehicleModel, VehicleModel, QDistinct> distinctByLicensePlate(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
@@ -883,6 +977,12 @@ extension VehicleModelQueryProperty
   QueryBuilder<VehicleModel, String, QQueryOperations> brandProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'brand');
+    });
+  }
+
+  QueryBuilder<VehicleModel, int, QQueryOperations> hashCodeProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'hashCode');
     });
   }
 
