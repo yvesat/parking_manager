@@ -9,10 +9,10 @@ class ParkingSlotGridPage extends ConsumerStatefulWidget {
   const ParkingSlotGridPage({super.key});
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _ParkingSlotsGridPageState();
+  ConsumerState<ConsumerStatefulWidget> createState() => _ParkingSlotGridPageState();
 }
 
-class _ParkingSlotsGridPageState extends ConsumerState<ParkingSlotGridPage> {
+class _ParkingSlotGridPageState extends ConsumerState<ParkingSlotGridPage> {
   Future<void>? _loadedData;
   @override
   void initState() {

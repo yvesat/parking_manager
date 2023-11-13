@@ -3,7 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:parking_manager/src/view/pages/registration_pages/vehicle_reg_page.dart';
 
 import '../view/pages/parking_history_page.dart';
-import '../view/pages/parking_slots_grid_page.dart';
+import '../view/pages/parking_slot_grid_page.dart';
 import '../view/pages/registration_pages/parking_slot_reg_page.dart';
 import '../view/pages/root_navigation_page.dart';
 
