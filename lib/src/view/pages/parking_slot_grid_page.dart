@@ -5,14 +5,14 @@ import 'package:parking_manager/src/view/widgets/parking_slot_grid.dart';
 
 import '../widgets/progress.dart';
 
-class ParkingSlotsGridPage extends ConsumerStatefulWidget {
-  const ParkingSlotsGridPage({super.key});
+class ParkingSlotGridPage extends ConsumerStatefulWidget {
+  const ParkingSlotGridPage({super.key});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _ParkingSlotsGridPageState();
 }
 
-class _ParkingSlotsGridPageState extends ConsumerState<ParkingSlotsGridPage> {
+class _ParkingSlotsGridPageState extends ConsumerState<ParkingSlotGridPage> {
   Future<void>? _loadedData;
   @override
   void initState() {

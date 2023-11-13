@@ -28,7 +28,7 @@ final router = GoRouter(
             GoRoute(
               path: '/parkingSlots',
               pageBuilder: (context, state) => const NoTransitionPage(
-                child: ParkingSlotsGridPage(),
+                child: ParkingSlotGridPage(),
               ),
               // routes: [
               //   GoRoute(
