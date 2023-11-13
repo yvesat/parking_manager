@@ -43,10 +43,6 @@ class ParkingSlotModelNotifier extends StateNotifier<List<ParkingSlotModel>> {
       newParkingSlotNumber = state.last.parkingSlotNumber + 1;
     }
 
-    //final lastParkingSlot = state.isSortedBy((element) => element.parkingSlotNumber);
-
-    //final newParkingSlotNumber = lastParkingSlot != null ? lastParkingSlot.parkingSlotNumber + 1 : 1;
-
     final newParkingSlot = ParkingSlotModel(parkingSlotNumber: newParkingSlotNumber);
 
     state = [...state, newParkingSlot];
