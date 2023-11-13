@@ -30,7 +30,7 @@ class _ParkingSlotControlPageState extends ConsumerState<ParkingSlotControlPage>
     final Alert alert = Alert();
 
     final parkingSlotController = ref.read(parkingSlotControllerProvider.notifier);
-    final parkingSlotState = parkingSlotController.getParkingSlot(ref, widget.parkingSlotNumber);
+    final parkingSlotState = parkingSlotController.getParkingSlot(ref, context, widget.parkingSlotNumber);
     final vehicleController = ref.watch(vehicleControllerProvider.notifier);
     final vehicleState = vehicleController.getVehicleState(ref);
 

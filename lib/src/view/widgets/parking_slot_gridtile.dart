@@ -13,7 +13,7 @@ class ParkingSlotGridTile extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final parkingSlotController = ref.read(parkingSlotControllerProvider.notifier);
-    final parkingSlotState = parkingSlotController.getParkingSlot(ref, parkingslotNumber);
+    final parkingSlotState = parkingSlotController.getParkingSlot(ref, context, parkingslotNumber);
 
     final vehicleController = ref.read(vehicleControllerProvider.notifier);
     final vehicleState = vehicleController.getVehicle(ref, parkingSlotState!.occupyingVehicleId);
