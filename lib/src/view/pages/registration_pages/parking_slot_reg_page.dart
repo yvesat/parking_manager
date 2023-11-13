@@ -29,7 +29,10 @@ class ParkingSlotRegPage extends ConsumerWidget {
         padding: const EdgeInsets.all(16),
         child: ListView.builder(
           itemCount: parkingState.length,
-          itemBuilder: (context, index) => ParkingSlotRegTile(parkingSlotId: parkingState[index].parkingSlotNumber),
+          itemBuilder: (context, index) => ParkingSlotRegTile(
+            parkingSlotId: parkingState[index].parkingSlotNumber,
+            onPressed: () => parkingController.removeParkingSlot(context, ref, parkingState[index]),
+          ),
         ),
       ),
     );

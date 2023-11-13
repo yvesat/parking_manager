@@ -6,22 +6,21 @@ import '../../controller/parking_slot_controller.dart';
 
 class ParkingSlotRegTile extends HookConsumerWidget {
   final int parkingSlotId;
-  const ParkingSlotRegTile({required this.parkingSlotId, super.key});
+  final void Function()? onPressed;
+  const ParkingSlotRegTile({required this.parkingSlotId, required this.onPressed, super.key});
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final parkingController = ref.read(parkingSlotControllerProvider.notifier);
-    final parkingSlot = parkingController.getParkingSlot(ref, parkingSlotId);
-    final parkingSlotAvailable = parkingSlot!.occupyingVehicleId != null ? false : true;
+    final parkingSlot = ref.read(parkingSlotControllerProvider.notifier).getParkingSlot(ref, context, parkingSlotId);
 
     return Card(
       child: ListTile(
         leading: FaIcon(
           FontAwesomeIcons.carSide,
-          color: parkingSlotAvailable ? Colors.green : Colors.red,
+          color: parkingSlot!.available ? Colors.green : Colors.red,
         ),
-        title: Text("Vaga $parkingSlotId - ${parkingSlotAvailable ? '(Disponível)' : '(Ocupada)'}"),
+        title: Text("Vaga $parkingSlotId - ${parkingSlot.available ? '(Disponível)' : '(Ocupada)'}"),
         trailing: IconButton(
-          onPressed: parkingSlotAvailable ? () => parkingController.removeParkingSlot(context, ref, parkingSlot) : null,
+          onPressed: onPressed,
           icon: const FaIcon(FontAwesomeIcons.trash),
         ),
       ),

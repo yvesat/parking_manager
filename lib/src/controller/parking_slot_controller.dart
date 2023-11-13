@@ -1,8 +1,8 @@
 // ignore_for_file: use_build_context_synchronously
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:parking_manager/src/model/parking_slot_model.dart';
 
+import '../model/parking_slot_model.dart';
 import '../model/services/isar_service.dart';
 import '../view/widgets/alert.dart';
 
@@ -28,10 +28,11 @@ class ParkingSlotController extends StateNotifier<AsyncValue<void>> {
     }
   }
 
-  ParkingSlotModel? getParkingSlot(WidgetRef ref, int id) {
+  ParkingSlotModel? getParkingSlot(WidgetRef ref, BuildContext context, int id) {
     try {
       return ref.watch(parkingSlotProvider.notifier).getParkingSlot(id);
     } catch (e) {
+      alert.snack(context, e.toString());
       return null;
     }
   }
@@ -55,6 +56,12 @@ class ParkingSlotController extends StateNotifier<AsyncValue<void>> {
   Future<void> removeParkingSlot(BuildContext context, WidgetRef ref, ParkingSlotModel parkingSlot) async {
     try {
       state = const AsyncValue.loading();
+
+      if (!parkingSlot.available) {
+        await alert.snack(context, "A vaga está ocupada. Dê saída no veículo antes de fazer a exclusão");
+        return;
+      }
+
       final removedParkingSlotNumber = parkingSlot.parkingSlotNumber;
       final parkingSlotState = ref.read(parkingSlotProvider.notifier);
 
@@ -62,7 +69,7 @@ class ParkingSlotController extends StateNotifier<AsyncValue<void>> {
 
       await isarService.removeParkingSlotDB(parkingSlot);
 
-      alert.snack(context, "Vaga $removedParkingSlotNumber removida!"); //TODO: Corrigir
+      alert.snack(context, "Vaga $removedParkingSlotNumber removida!");
     } catch (e) {
       alert.snack(context, e.toString());
     } finally {
