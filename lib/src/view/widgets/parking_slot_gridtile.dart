@@ -52,6 +52,7 @@ class ParkingSlotGridTile extends ConsumerWidget {
                   if (!parkingSlotState.available)
                     SizedBox(
                       child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           const SizedBox(height: 8),
                           Text("${vehicleState!.brand} ${vehicleState.model}"),
