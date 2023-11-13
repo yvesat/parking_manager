@@ -1,4 +1,3 @@
-// ignore_for_file: use_build_context_synchronously
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -20,9 +19,9 @@ class ParkingSlotController extends StateNotifier<AsyncValue<void>> {
       final newParkingSlot = parkingSlotState.createParkingSlot();
       await isarService.saveParkingslotDB(newParkingSlot);
 
-      alert.snack(context, "Vaga ${newParkingSlot.parkingSlotNumber} criada!");
+      if (context.mounted) alert.snack(context, "Vaga ${newParkingSlot.parkingSlotNumber} criada!");
     } catch (e) {
-      alert.snack(context, e.toString());
+      if (context.mounted) alert.snack(context, e.toString());
     } finally {
       state = const AsyncValue.data(null);
     }
@@ -41,13 +40,21 @@ class ParkingSlotController extends StateNotifier<AsyncValue<void>> {
     return ref.watch(parkingSlotProvider);
   }
 
-  void setVehicleEntry(WidgetRef ref, BuildContext context, vehicleId, int parkingSlotNumber) async {
+  Future<void> setVehicleEntry(WidgetRef ref, BuildContext context, int? vehicleId, int parkingSlotNumber) async {
+    await _setVehicleEntryExit(ref, context, vehicleId, parkingSlotNumber);
+  }
+
+  Future<void> setVehicleExit(WidgetRef ref, BuildContext context, int parkingSlotNumber) async {
+    await _setVehicleEntryExit(ref, context, null, parkingSlotNumber);
+  }
+
+  Future<void> _setVehicleEntryExit(WidgetRef ref, BuildContext context, int? vehicleId, int parkingSlotNumber) async {
     try {
       final alteredParkingSlot = ref.read(parkingSlotProvider.notifier).editOccupyingvehicle(parkingSlotNumber, vehicleId);
       if (alteredParkingSlot == null) throw Exception("Vaga não encontrada no estado da aplicação");
       await isarService.saveParkingslotDB(alteredParkingSlot);
     } catch (e) {
-      alert.snack(context, e.toString());
+      if (context.mounted) alert.snack(context, e.toString());
     } finally {
       state = const AsyncValue.data(null);
     }
@@ -69,9 +76,9 @@ class ParkingSlotController extends StateNotifier<AsyncValue<void>> {
 
       await isarService.removeParkingSlotDB(parkingSlot);
 
-      alert.snack(context, "Vaga $removedParkingSlotNumber removida!");
+      if (context.mounted) alert.snack(context, "Vaga $removedParkingSlotNumber removida!");
     } catch (e) {
-      alert.snack(context, e.toString());
+      if (context.mounted) alert.snack(context, e.toString());
     } finally {
       state = const AsyncValue.data(null);
     }
