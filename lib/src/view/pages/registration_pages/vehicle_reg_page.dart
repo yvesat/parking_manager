@@ -4,7 +4,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../../controller/vehicle_controller.dart';
 import '../../widgets/alert.dart';
-import '../../widgets/car_text_form_field.dart';
+import '../../widgets/vehicle_text_form_field.dart';
 
 class VehicleRegPage extends ConsumerStatefulWidget {
   const VehicleRegPage({Key? key}) : super(key: key);
@@ -44,7 +44,7 @@ class _VehicleRegPageState extends ConsumerState<VehicleRegPage> {
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
                 ),
               ),
-              CarTextFormField(
+              VehicleTextFormField(
                 enabled: true,
                 textController: _brandController,
                 icon: FontAwesomeIcons.industry,
@@ -56,7 +56,7 @@ class _VehicleRegPageState extends ConsumerState<VehicleRegPage> {
                   return null;
                 },
               ),
-              CarTextFormField(
+              VehicleTextFormField(
                 enabled: true,
                 textController: _modelController,
                 icon: FontAwesomeIcons.car,
@@ -68,7 +68,7 @@ class _VehicleRegPageState extends ConsumerState<VehicleRegPage> {
                   return null;
                 },
               ),
-              CarTextFormField(
+              VehicleTextFormField(
                 enabled: true,
                 textController: _licensePlateController,
                 icon: FontAwesomeIcons.circleInfo,

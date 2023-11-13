@@ -5,7 +5,8 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import '../../controller/parking_slot_controller.dart';
 import '../../controller/vehicle_controller.dart';
 import '../../model/vehicle_model.dart';
-import '../widgets/car_text_form_field.dart';
+import '../widgets/alert.dart';
+import '../widgets/vehicle_text_form_field.dart';
 
 class ParkingSlotControlPage extends ConsumerStatefulWidget {
   final int parkingSlotNumber;
@@ -16,6 +17,7 @@ class ParkingSlotControlPage extends ConsumerStatefulWidget {
 }
 
 class _ParkingSlotControlPageState extends ConsumerState<ParkingSlotControlPage> {
+  final _formKey = GlobalKey<FormState>();
   final _brandController = TextEditingController();
   final _modelController = TextEditingController();
   final _licensePlateController = TextEditingController();
@@ -23,6 +25,8 @@ class _ParkingSlotControlPageState extends ConsumerState<ParkingSlotControlPage>
 
   @override
   Widget build(BuildContext context) {
+    final Alert alert = Alert();
+
     final parkingSlotController = ref.read(parkingSlotControllerProvider.notifier);
     final parkingSlotState = parkingSlotController.getParkingSlot(ref, widget.parkingSlotNumber);
     final vehicleState = ref.read(vehicleControllerProvider.notifier).getVehicleState(ref);
@@ -35,53 +39,56 @@ class _ParkingSlotControlPageState extends ConsumerState<ParkingSlotControlPage>
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              "Vaga ${parkingSlotState!.available ? "Disponível" : "Ocupada"}",
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18, color: parkingSlotState.available ? Colors.green : Colors.red),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: 16),
-              child: Text(
-                "Registrar ${parkingSlotState.available ? "entrada" : "saída"} do veículo?",
+        child: Form(
+          key: _formKey,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                "Vaga ${parkingSlotState!.available ? "Disponível" : "Ocupada"}",
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18, color: parkingSlotState.available ? Colors.green : Colors.red),
               ),
-            ),
-            if (parkingSlotState.available)
               Padding(
-                padding: const EdgeInsets.symmetric(vertical: 24.0),
-                child: Autocomplete<VehicleModel>(
-                  displayStringForOption: _displayStringForOption,
-                  optionsBuilder: (TextEditingValue textEditingValue) {
-                    if (textEditingValue.text == '') {
-                      return const Iterable<VehicleModel>.empty();
-                    }
-                    return vehicleState.where((VehicleModel option) {
-                      return option.licensePlate.contains(textEditingValue.text.toLowerCase());
-                    });
-                  },
-                  onSelected: (VehicleModel selection) {
-                    setState(() {
-                      _brandController.text = selection.brand;
-                      _modelController.text = selection.model;
-                      _licensePlateController.text = selection.licensePlate;
-                    });
-                  },
+                padding: const EdgeInsets.only(top: 16),
+                child: Text(
+                  "Registrar ${parkingSlotState.available ? "entrada" : "saída"} do veículo?",
                 ),
               ),
-            CarTextFormField(enabled: false, textController: _brandController, icon: FontAwesomeIcons.industry, label: 'Marca'),
-            CarTextFormField(enabled: false, textController: _modelController, icon: FontAwesomeIcons.car, label: 'Modelo'),
-            CarTextFormField(enabled: false, textController: _licensePlateController, icon: FontAwesomeIcons.circleInfo, label: 'Placa'),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () async {},
-              child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-                child: Text(parkingSlotState.available ? 'Registrar Entrada' : 'Registrar Saída'),
+              if (parkingSlotState.available)
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 24.0),
+                  child: Autocomplete<VehicleModel>(
+                    displayStringForOption: _displayStringForOption,
+                    optionsBuilder: (TextEditingValue textEditingValue) {
+                      if (textEditingValue.text == '') {
+                        return const Iterable<VehicleModel>.empty();
+                      }
+                      return vehicleState.where((VehicleModel option) {
+                        return option.licensePlate.contains(textEditingValue.text.toLowerCase());
+                      });
+                    },
+                    onSelected: (VehicleModel selection) {
+                      setState(() {
+                        _brandController.text = selection.brand;
+                        _modelController.text = selection.model;
+                        _licensePlateController.text = selection.licensePlate;
+                      });
+                    },
+                  ),
+                ),
+              VehicleTextFormField(enabled: false, textController: _brandController, icon: FontAwesomeIcons.industry, label: 'Marca'),
+              VehicleTextFormField(enabled: false, textController: _modelController, icon: FontAwesomeIcons.car, label: 'Modelo'),
+              VehicleTextFormField(enabled: false, textController: _licensePlateController, icon: FontAwesomeIcons.circleInfo, label: 'Placa'),
+              const SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: () async {},
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                  child: Text(parkingSlotState.available ? 'Registrar Entrada' : 'Registrar Saída'),
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
