@@ -1,4 +1,5 @@
 import 'package:collection/collection.dart';
+import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:isar/isar.dart';
 
@@ -58,10 +59,10 @@ class ParkingSlotModelNotifier extends StateNotifier<List<ParkingSlotModel>> {
     return state.firstWhereOrNull((e) => e.parkingSlotNumber == parkingSlotNumber);
   }
 
-  void editOccupyingvehicle(ParkingSlotModel parkingSlot, int? occupyingVehicleId) {
+  ParkingSlotModel? editOccupyingvehicle(int parkingSlotNumber, int? occupyingVehicleId) {
     state = [
       for (final parkingSlotState in state)
-        if (parkingSlotState.parkingSlotNumber == parkingSlot.parkingSlotNumber)
+        if (parkingSlotState.parkingSlotNumber == parkingSlotNumber)
           parkingSlotState.copyWith(
             occupyingVehicleId: occupyingVehicleId,
             available: occupyingVehicleId != null ? false : true,
@@ -69,6 +70,8 @@ class ParkingSlotModelNotifier extends StateNotifier<List<ParkingSlotModel>> {
         else
           parkingSlotState,
     ];
+
+    return state.firstWhereOrNull((element) => element.parkingSlotNumber == parkingSlotNumber);
   }
 
   void removeParkingSlot(ParkingSlotModel parkingSlot) {

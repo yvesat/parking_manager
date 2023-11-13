@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../controller/parking_slot_controller.dart';
@@ -29,7 +31,8 @@ class _ParkingSlotControlPageState extends ConsumerState<ParkingSlotControlPage>
 
     final parkingSlotController = ref.read(parkingSlotControllerProvider.notifier);
     final parkingSlotState = parkingSlotController.getParkingSlot(ref, widget.parkingSlotNumber);
-    final vehicleState = ref.read(vehicleControllerProvider.notifier).getVehicleState(ref);
+    final vehicleController = ref.watch(vehicleControllerProvider.notifier);
+    final vehicleState = vehicleController.getVehicleState(ref);
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -72,6 +75,7 @@ class _ParkingSlotControlPageState extends ConsumerState<ParkingSlotControlPage>
                         _brandController.text = selection.brand;
                         _modelController.text = selection.model;
                         _licensePlateController.text = selection.licensePlate;
+                        SystemChannels.textInput.invokeMethod('TextInput.hide');
                       });
                     },
                   ),
@@ -81,7 +85,20 @@ class _ParkingSlotControlPageState extends ConsumerState<ParkingSlotControlPage>
               VehicleTextFormField(enabled: false, textController: _licensePlateController, icon: FontAwesomeIcons.circleInfo, label: 'Placa'),
               const SizedBox(height: 20),
               ElevatedButton(
-                onPressed: () async {},
+                onPressed: () {
+                  if (_formKey.currentState!.validate()) {
+                    final vehicle = vehicleController.searchVehicleByLP(ref, _licensePlateController.text);
+                    parkingSlotController.setVehicleEntry(ref, context, vehicle!.vehicleId, widget.parkingSlotNumber);
+
+                    alert.snack(context, "Veículo placa ${_licensePlateController.text} alocado a vaga ${widget.parkingSlotNumber}."); //TODO: Adaptar para entrada / saída
+                    _brandController.clear();
+                    _modelController.clear();
+                    _licensePlateController.clear();
+                    context.pop();
+                  } else {
+                    alert.snack(context, "Favor preencher todos os dados."); //TODO: Adaptar para entrada / saída
+                  }
+                },
                 child: Padding(
                   padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
                   child: Text(parkingSlotState.available ? 'Registrar Entrada' : 'Registrar Saída'),

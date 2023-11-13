@@ -40,6 +40,18 @@ class ParkingSlotController extends StateNotifier<AsyncValue<void>> {
     return ref.watch(parkingSlotProvider);
   }
 
+  void setVehicleEntry(WidgetRef ref, BuildContext context, vehicleId, int parkingSlotNumber) async {
+    try {
+      final alteredParkingSlot = ref.read(parkingSlotProvider.notifier).editOccupyingvehicle(parkingSlotNumber, vehicleId);
+      if (alteredParkingSlot == null) throw Exception("Vaga não encontrada no estado da aplicação");
+      await isarService.saveParkingslotDB(alteredParkingSlot);
+    } catch (e) {
+      alert.snack(context, e.toString());
+    } finally {
+      state = const AsyncValue.data(null);
+    }
+  }
+
   Future<void> removeParkingSlot(BuildContext context, WidgetRef ref, ParkingSlotModel parkingSlot) async {
     try {
       state = const AsyncValue.loading();
