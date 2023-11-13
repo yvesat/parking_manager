@@ -36,15 +36,26 @@ class ParkingSlotModelNotifier extends StateNotifier<List<ParkingSlotModel>> {
   ParkingSlotModelNotifier() : super([]);
 
   ParkingSlotModel createParkingSlot() {
-    final lastParkingSlot = state.lastOrNull;
+    int newParkingSlotNumber = 1;
 
-    final newParkingSlotNumber = lastParkingSlot != null ? lastParkingSlot.parkingSlotNumber + 1 : 1;
+    if (state.isNotEmpty) {
+      state.sort((a, b) => a.parkingSlotNumber.compareTo(b.parkingSlotNumber));
+      newParkingSlotNumber = state.last.parkingSlotNumber + 1;
+    }
+
+    //final lastParkingSlot = state.isSortedBy((element) => element.parkingSlotNumber);
+
+    //final newParkingSlotNumber = lastParkingSlot != null ? lastParkingSlot.parkingSlotNumber + 1 : 1;
 
     final newParkingSlot = ParkingSlotModel(parkingSlotNumber: newParkingSlotNumber);
 
     state = [...state, newParkingSlot];
 
     return newParkingSlot;
+  }
+
+  void loadParkingSlotData(ParkingSlotModel parkingSlot) {
+    state = [...state, parkingSlot];
   }
 
   ParkingSlotModel? getParkingSlot(int parkingSlotNumber) {

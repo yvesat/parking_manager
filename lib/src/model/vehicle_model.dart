@@ -60,6 +60,10 @@ class VehicleModelNotifier extends StateNotifier<List<VehicleModel>> {
     return newVehicle;
   }
 
+  void loadVehicleData(VehicleModel vehicle) {
+    state = [...state, vehicle];
+  }
+
   VehicleModel? getVehicle(int vehicleId) {
     return state.firstWhereOrNull((e) => e.vehicleId == vehicleId);
   }
