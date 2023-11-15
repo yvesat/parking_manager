@@ -21,15 +21,7 @@ class ParkingSlotGridTile extends ConsumerWidget {
     return ClipRRect(
       borderRadius: BorderRadius.circular(10),
       child: InkWell(
-        onTap: () => Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => ParkingSlotControlPage(parkingslotNumber)),
-          // onTap: () => context.go(
-          //   Uri(
-          //     path: 'parkingSlotControl',
-          //     queryParameters: {'parkingslotNumber': parkingslotNumber.toString()},
-          //   ).toString(),
-        ),
+        onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => ParkingSlotControlPage(parkingslotNumber))),
         child: Card(
           elevation: 1.5,
           child: Padding(
