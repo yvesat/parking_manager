@@ -20,7 +20,7 @@ class ParkingSlotModel {
   }) {
     return ParkingSlotModel(
       parkingSlotNumber: parkingSlotNumber ?? this.parkingSlotNumber,
-      occupyingVehicleId: occupyingVehicleId ?? this.occupyingVehicleId,
+      occupyingVehicleId: occupyingVehicleId,
       available: available ?? this.available,
     );
   }
