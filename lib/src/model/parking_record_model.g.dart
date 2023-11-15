@@ -10,8 +10,7 @@ part of 'parking_record_model.dart';
 // ignore_for_file: duplicate_ignore, non_constant_identifier_names, constant_identifier_names, invalid_use_of_protected_member, unnecessary_cast, prefer_const_constructors, lines_longer_than_80_chars, require_trailing_commas, inference_failure_on_function_invocation, unnecessary_parenthesis, unnecessary_raw_strings, unnecessary_null_checks, join_return_with_assignment, prefer_final_locals, avoid_js_rounded_ints, avoid_positional_boolean_parameters, always_specify_types
 
 extension GetParkingRecordModelCollection on Isar {
-  IsarCollection<ParkingRecordModel> get parkingRecordModels =>
-      this.collection();
+  IsarCollection<ParkingRecordModel> get parkingRecordModels => this.collection();
 }
 
 const ParkingRecordModelSchema = CollectionSchema(
@@ -33,14 +32,14 @@ const ParkingRecordModelSchema = CollectionSchema(
       name: r'parkingRecordId',
       type: IsarType.long,
     ),
-    r'parkingSlotId': PropertySchema(
+    r'parkingSlotNumber': PropertySchema(
       id: 3,
-      name: r'parkingSlotId',
+      name: r'parkingSlotNumber',
       type: IsarType.long,
     ),
-    r'vehicleBrandModel': PropertySchema(
+    r'vehicleBrand': PropertySchema(
       id: 4,
-      name: r'vehicleBrandModel',
+      name: r'vehicleBrand',
       type: IsarType.string,
     ),
     r'vehicleId': PropertySchema(
@@ -48,9 +47,14 @@ const ParkingRecordModelSchema = CollectionSchema(
       name: r'vehicleId',
       type: IsarType.long,
     ),
-    r'vehicleLicenePlate': PropertySchema(
+    r'vehicleLicensePlate': PropertySchema(
       id: 6,
-      name: r'vehicleLicenePlate',
+      name: r'vehicleLicensePlate',
+      type: IsarType.string,
+    ),
+    r'vehicleModel': PropertySchema(
+      id: 7,
+      name: r'vehicleModel',
       type: IsarType.string,
     )
   },
@@ -74,8 +78,9 @@ int _parkingRecordModelEstimateSize(
   Map<Type, List<int>> allOffsets,
 ) {
   var bytesCount = offsets.last;
-  bytesCount += 3 + object.vehicleBrandModel.length * 3;
-  bytesCount += 3 + object.vehicleLicenePlate.length * 3;
+  bytesCount += 3 + object.vehicleBrand.length * 3;
+  bytesCount += 3 + object.vehicleLicensePlate.length * 3;
+  bytesCount += 3 + object.vehicleModel.length * 3;
   return bytesCount;
 }
 
@@ -85,13 +90,14 @@ void _parkingRecordModelSerialize(
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
-  writer.writeDateTime(offsets[0], object.entryTime);
-  writer.writeDateTime(offsets[1], object.exitTime);
+  writer.writeDateTime(offsets[0], object.entryDate);
+  writer.writeDateTime(offsets[1], object.exitDate);
   writer.writeLong(offsets[2], object.parkingRecordId);
-  writer.writeLong(offsets[3], object.parkingSlotId);
-  writer.writeString(offsets[4], object.vehicleBrandModel);
+  writer.writeLong(offsets[3], object.parkingSlotNumber);
+  writer.writeString(offsets[4], object.vehicleBrand);
   writer.writeLong(offsets[5], object.vehicleId);
-  writer.writeString(offsets[6], object.vehicleLicenePlate);
+  writer.writeString(offsets[6], object.vehicleLicensePlate);
+  writer.writeString(offsets[7], object.vehicleModel);
 }
 
 ParkingRecordModel _parkingRecordModelDeserialize(
@@ -101,13 +107,14 @@ ParkingRecordModel _parkingRecordModelDeserialize(
   Map<Type, List<int>> allOffsets,
 ) {
   final object = ParkingRecordModel(
-    entryTime: reader.readDateTime(offsets[0]),
-    exitTime: reader.readDateTimeOrNull(offsets[1]),
+    entryDate: reader.readDateTime(offsets[0]),
+    exitDate: reader.readDateTimeOrNull(offsets[1]),
     parkingRecordId: reader.readLong(offsets[2]),
-    parkingSlotId: reader.readLong(offsets[3]),
-    vehicleBrandModel: reader.readString(offsets[4]),
+    parkingSlotNumber: reader.readLong(offsets[3]),
+    vehicleBrand: reader.readString(offsets[4]),
     vehicleId: reader.readLong(offsets[5]),
-    vehicleLicenePlate: reader.readString(offsets[6]),
+    vehicleLicensePlate: reader.readString(offsets[6]),
+    vehicleModel: reader.readString(offsets[7]),
   );
   object.id = id;
   return object;
@@ -134,6 +141,8 @@ P _parkingRecordModelDeserializeProp<P>(
       return (reader.readLong(offset)) as P;
     case 6:
       return (reader.readString(offset)) as P;
+    case 7:
+      return (reader.readString(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
   }
@@ -143,18 +152,15 @@ Id _parkingRecordModelGetId(ParkingRecordModel object) {
   return object.id;
 }
 
-List<IsarLinkBase<dynamic>> _parkingRecordModelGetLinks(
-    ParkingRecordModel object) {
+List<IsarLinkBase<dynamic>> _parkingRecordModelGetLinks(ParkingRecordModel object) {
   return [];
 }
 
-void _parkingRecordModelAttach(
-    IsarCollection<dynamic> col, Id id, ParkingRecordModel object) {
+void _parkingRecordModelAttach(IsarCollection<dynamic> col, Id id, ParkingRecordModel object) {
   object.id = id;
 }
 
-extension ParkingRecordModelQueryWhereSort
-    on QueryBuilder<ParkingRecordModel, ParkingRecordModel, QWhere> {
+extension ParkingRecordModelQueryWhereSort on QueryBuilder<ParkingRecordModel, ParkingRecordModel, QWhere> {
   QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterWhere> anyId() {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(const IdWhereClause.any());
@@ -162,10 +168,8 @@ extension ParkingRecordModelQueryWhereSort
   }
 }
 
-extension ParkingRecordModelQueryWhere
-    on QueryBuilder<ParkingRecordModel, ParkingRecordModel, QWhereClause> {
-  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterWhereClause>
-      idEqualTo(Id id) {
+extension ParkingRecordModelQueryWhere on QueryBuilder<ParkingRecordModel, ParkingRecordModel, QWhereClause> {
+  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterWhereClause> idEqualTo(Id id) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(IdWhereClause.between(
         lower: id,
@@ -174,8 +178,7 @@ extension ParkingRecordModelQueryWhere
     });
   }
 
-  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterWhereClause>
-      idNotEqualTo(Id id) {
+  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterWhereClause> idNotEqualTo(Id id) {
     return QueryBuilder.apply(this, (query) {
       if (query.whereSort == Sort.asc) {
         return query
@@ -197,8 +200,7 @@ extension ParkingRecordModelQueryWhere
     });
   }
 
-  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterWhereClause>
-      idGreaterThan(Id id, {bool include = false}) {
+  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterWhereClause> idGreaterThan(Id id, {bool include = false}) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(
         IdWhereClause.greaterThan(lower: id, includeLower: include),
@@ -206,8 +208,7 @@ extension ParkingRecordModelQueryWhere
     });
   }
 
-  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterWhereClause>
-      idLessThan(Id id, {bool include = false}) {
+  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterWhereClause> idLessThan(Id id, {bool include = false}) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(
         IdWhereClause.lessThan(upper: id, includeUpper: include),
@@ -215,8 +216,7 @@ extension ParkingRecordModelQueryWhere
     });
   }
 
-  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterWhereClause>
-      idBetween(
+  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterWhereClause> idBetween(
     Id lowerId,
     Id upperId, {
     bool includeLower = true,
@@ -233,10 +233,8 @@ extension ParkingRecordModelQueryWhere
   }
 }
 
-extension ParkingRecordModelQueryFilter
-    on QueryBuilder<ParkingRecordModel, ParkingRecordModel, QFilterCondition> {
-  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterFilterCondition>
-      entryTimeEqualTo(DateTime value) {
+extension ParkingRecordModelQueryFilter on QueryBuilder<ParkingRecordModel, ParkingRecordModel, QFilterCondition> {
+  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterFilterCondition> entryTimeEqualTo(DateTime value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'entryTime',
@@ -245,8 +243,7 @@ extension ParkingRecordModelQueryFilter
     });
   }
 
-  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterFilterCondition>
-      entryTimeGreaterThan(
+  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterFilterCondition> entryTimeGreaterThan(
     DateTime value, {
     bool include = false,
   }) {
@@ -259,8 +256,7 @@ extension ParkingRecordModelQueryFilter
     });
   }
 
-  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterFilterCondition>
-      entryTimeLessThan(
+  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterFilterCondition> entryTimeLessThan(
     DateTime value, {
     bool include = false,
   }) {
@@ -273,8 +269,7 @@ extension ParkingRecordModelQueryFilter
     });
   }
 
-  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterFilterCondition>
-      entryTimeBetween(
+  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterFilterCondition> entryTimeBetween(
     DateTime lower,
     DateTime upper, {
     bool includeLower = true,
@@ -291,8 +286,7 @@ extension ParkingRecordModelQueryFilter
     });
   }
 
-  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterFilterCondition>
-      exitTimeIsNull() {
+  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterFilterCondition> exitTimeIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNull(
         property: r'exitTime',
@@ -300,8 +294,7 @@ extension ParkingRecordModelQueryFilter
     });
   }
 
-  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterFilterCondition>
-      exitTimeIsNotNull() {
+  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterFilterCondition> exitTimeIsNotNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNotNull(
         property: r'exitTime',
@@ -309,8 +302,7 @@ extension ParkingRecordModelQueryFilter
     });
   }
 
-  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterFilterCondition>
-      exitTimeEqualTo(DateTime? value) {
+  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterFilterCondition> exitTimeEqualTo(DateTime? value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'exitTime',
@@ -319,8 +311,7 @@ extension ParkingRecordModelQueryFilter
     });
   }
 
-  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterFilterCondition>
-      exitTimeGreaterThan(
+  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterFilterCondition> exitTimeGreaterThan(
     DateTime? value, {
     bool include = false,
   }) {
@@ -333,8 +324,7 @@ extension ParkingRecordModelQueryFilter
     });
   }
 
-  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterFilterCondition>
-      exitTimeLessThan(
+  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterFilterCondition> exitTimeLessThan(
     DateTime? value, {
     bool include = false,
   }) {
@@ -347,8 +337,7 @@ extension ParkingRecordModelQueryFilter
     });
   }
 
-  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterFilterCondition>
-      exitTimeBetween(
+  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterFilterCondition> exitTimeBetween(
     DateTime? lower,
     DateTime? upper, {
     bool includeLower = true,
@@ -365,8 +354,7 @@ extension ParkingRecordModelQueryFilter
     });
   }
 
-  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterFilterCondition>
-      idEqualTo(Id value) {
+  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterFilterCondition> idEqualTo(Id value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'id',
@@ -375,8 +363,7 @@ extension ParkingRecordModelQueryFilter
     });
   }
 
-  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterFilterCondition>
-      idGreaterThan(
+  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterFilterCondition> idGreaterThan(
     Id value, {
     bool include = false,
   }) {
@@ -389,8 +376,7 @@ extension ParkingRecordModelQueryFilter
     });
   }
 
-  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterFilterCondition>
-      idLessThan(
+  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterFilterCondition> idLessThan(
     Id value, {
     bool include = false,
   }) {
@@ -403,8 +389,7 @@ extension ParkingRecordModelQueryFilter
     });
   }
 
-  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterFilterCondition>
-      idBetween(
+  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterFilterCondition> idBetween(
     Id lower,
     Id upper, {
     bool includeLower = true,
@@ -421,8 +406,7 @@ extension ParkingRecordModelQueryFilter
     });
   }
 
-  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterFilterCondition>
-      parkingRecordIdEqualTo(int value) {
+  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterFilterCondition> parkingRecordIdEqualTo(int value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'parkingRecordId',
@@ -431,8 +415,7 @@ extension ParkingRecordModelQueryFilter
     });
   }
 
-  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterFilterCondition>
-      parkingRecordIdGreaterThan(
+  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterFilterCondition> parkingRecordIdGreaterThan(
     int value, {
     bool include = false,
   }) {
@@ -445,8 +428,7 @@ extension ParkingRecordModelQueryFilter
     });
   }
 
-  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterFilterCondition>
-      parkingRecordIdLessThan(
+  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterFilterCondition> parkingRecordIdLessThan(
     int value, {
     bool include = false,
   }) {
@@ -459,8 +441,7 @@ extension ParkingRecordModelQueryFilter
     });
   }
 
-  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterFilterCondition>
-      parkingRecordIdBetween(
+  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterFilterCondition> parkingRecordIdBetween(
     int lower,
     int upper, {
     bool includeLower = true,
@@ -477,46 +458,42 @@ extension ParkingRecordModelQueryFilter
     });
   }
 
-  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterFilterCondition>
-      parkingSlotIdEqualTo(int value) {
+  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterFilterCondition> parkingSlotNumberEqualTo(int value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'parkingSlotId',
+        property: r'parkingSlotNumber',
         value: value,
       ));
     });
   }
 
-  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterFilterCondition>
-      parkingSlotIdGreaterThan(
+  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterFilterCondition> parkingSlotNumberGreaterThan(
     int value, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         include: include,
-        property: r'parkingSlotId',
+        property: r'parkingSlotNumber',
         value: value,
       ));
     });
   }
 
-  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterFilterCondition>
-      parkingSlotIdLessThan(
+  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterFilterCondition> parkingSlotNumberLessThan(
     int value, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.lessThan(
         include: include,
-        property: r'parkingSlotId',
+        property: r'parkingSlotNumber',
         value: value,
       ));
     });
   }
 
-  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterFilterCondition>
-      parkingSlotIdBetween(
+  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterFilterCondition> parkingSlotNumberBetween(
     int lower,
     int upper, {
     bool includeLower = true,
@@ -524,7 +501,7 @@ extension ParkingRecordModelQueryFilter
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
-        property: r'parkingSlotId',
+        property: r'parkingSlotNumber',
         lower: lower,
         includeLower: includeLower,
         upper: upper,
@@ -533,22 +510,20 @@ extension ParkingRecordModelQueryFilter
     });
   }
 
-  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterFilterCondition>
-      vehicleBrandModelEqualTo(
+  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterFilterCondition> vehicleBrandEqualTo(
     String value, {
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'vehicleBrandModel',
+        property: r'vehicleBrand',
         value: value,
         caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterFilterCondition>
-      vehicleBrandModelGreaterThan(
+  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterFilterCondition> vehicleBrandGreaterThan(
     String value, {
     bool include = false,
     bool caseSensitive = true,
@@ -556,15 +531,14 @@ extension ParkingRecordModelQueryFilter
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         include: include,
-        property: r'vehicleBrandModel',
+        property: r'vehicleBrand',
         value: value,
         caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterFilterCondition>
-      vehicleBrandModelLessThan(
+  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterFilterCondition> vehicleBrandLessThan(
     String value, {
     bool include = false,
     bool caseSensitive = true,
@@ -572,15 +546,14 @@ extension ParkingRecordModelQueryFilter
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.lessThan(
         include: include,
-        property: r'vehicleBrandModel',
+        property: r'vehicleBrand',
         value: value,
         caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterFilterCondition>
-      vehicleBrandModelBetween(
+  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterFilterCondition> vehicleBrandBetween(
     String lower,
     String upper, {
     bool includeLower = true,
@@ -589,7 +562,7 @@ extension ParkingRecordModelQueryFilter
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
-        property: r'vehicleBrandModel',
+        property: r'vehicleBrand',
         lower: lower,
         includeLower: includeLower,
         upper: upper,
@@ -599,78 +572,71 @@ extension ParkingRecordModelQueryFilter
     });
   }
 
-  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterFilterCondition>
-      vehicleBrandModelStartsWith(
+  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterFilterCondition> vehicleBrandStartsWith(
     String value, {
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.startsWith(
-        property: r'vehicleBrandModel',
+        property: r'vehicleBrand',
         value: value,
         caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterFilterCondition>
-      vehicleBrandModelEndsWith(
+  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterFilterCondition> vehicleBrandEndsWith(
     String value, {
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.endsWith(
-        property: r'vehicleBrandModel',
+        property: r'vehicleBrand',
         value: value,
         caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterFilterCondition>
-      vehicleBrandModelContains(String value, {bool caseSensitive = true}) {
+  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterFilterCondition> vehicleBrandContains(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.contains(
-        property: r'vehicleBrandModel',
+        property: r'vehicleBrand',
         value: value,
         caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterFilterCondition>
-      vehicleBrandModelMatches(String pattern, {bool caseSensitive = true}) {
+  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterFilterCondition> vehicleBrandMatches(String pattern, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.matches(
-        property: r'vehicleBrandModel',
+        property: r'vehicleBrand',
         wildcard: pattern,
         caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterFilterCondition>
-      vehicleBrandModelIsEmpty() {
+  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterFilterCondition> vehicleBrandIsEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'vehicleBrandModel',
+        property: r'vehicleBrand',
         value: '',
       ));
     });
   }
 
-  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterFilterCondition>
-      vehicleBrandModelIsNotEmpty() {
+  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterFilterCondition> vehicleBrandIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
-        property: r'vehicleBrandModel',
+        property: r'vehicleBrand',
         value: '',
       ));
     });
   }
 
-  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterFilterCondition>
-      vehicleIdEqualTo(int value) {
+  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterFilterCondition> vehicleIdEqualTo(int value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'vehicleId',
@@ -679,8 +645,7 @@ extension ParkingRecordModelQueryFilter
     });
   }
 
-  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterFilterCondition>
-      vehicleIdGreaterThan(
+  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterFilterCondition> vehicleIdGreaterThan(
     int value, {
     bool include = false,
   }) {
@@ -693,8 +658,7 @@ extension ParkingRecordModelQueryFilter
     });
   }
 
-  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterFilterCondition>
-      vehicleIdLessThan(
+  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterFilterCondition> vehicleIdLessThan(
     int value, {
     bool include = false,
   }) {
@@ -707,8 +671,7 @@ extension ParkingRecordModelQueryFilter
     });
   }
 
-  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterFilterCondition>
-      vehicleIdBetween(
+  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterFilterCondition> vehicleIdBetween(
     int lower,
     int upper, {
     bool includeLower = true,
@@ -725,22 +688,20 @@ extension ParkingRecordModelQueryFilter
     });
   }
 
-  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterFilterCondition>
-      vehicleLicenePlateEqualTo(
+  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterFilterCondition> vehicleLicensePlateEqualTo(
     String value, {
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'vehicleLicenePlate',
+        property: r'vehicleLicensePlate',
         value: value,
         caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterFilterCondition>
-      vehicleLicenePlateGreaterThan(
+  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterFilterCondition> vehicleLicensePlateGreaterThan(
     String value, {
     bool include = false,
     bool caseSensitive = true,
@@ -748,15 +709,14 @@ extension ParkingRecordModelQueryFilter
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         include: include,
-        property: r'vehicleLicenePlate',
+        property: r'vehicleLicensePlate',
         value: value,
         caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterFilterCondition>
-      vehicleLicenePlateLessThan(
+  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterFilterCondition> vehicleLicensePlateLessThan(
     String value, {
     bool include = false,
     bool caseSensitive = true,
@@ -764,15 +724,14 @@ extension ParkingRecordModelQueryFilter
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.lessThan(
         include: include,
-        property: r'vehicleLicenePlate',
+        property: r'vehicleLicensePlate',
         value: value,
         caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterFilterCondition>
-      vehicleLicenePlateBetween(
+  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterFilterCondition> vehicleLicensePlateBetween(
     String lower,
     String upper, {
     bool includeLower = true,
@@ -781,7 +740,7 @@ extension ParkingRecordModelQueryFilter
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
-        property: r'vehicleLicenePlate',
+        property: r'vehicleLicensePlate',
         lower: lower,
         includeLower: includeLower,
         upper: upper,
@@ -791,393 +750,493 @@ extension ParkingRecordModelQueryFilter
     });
   }
 
-  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterFilterCondition>
-      vehicleLicenePlateStartsWith(
+  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterFilterCondition> vehicleLicensePlateStartsWith(
     String value, {
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.startsWith(
-        property: r'vehicleLicenePlate',
+        property: r'vehicleLicensePlate',
         value: value,
         caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterFilterCondition>
-      vehicleLicenePlateEndsWith(
+  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterFilterCondition> vehicleLicensePlateEndsWith(
     String value, {
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.endsWith(
-        property: r'vehicleLicenePlate',
+        property: r'vehicleLicensePlate',
         value: value,
         caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterFilterCondition>
-      vehicleLicenePlateContains(String value, {bool caseSensitive = true}) {
+  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterFilterCondition> vehicleLicensePlateContains(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.contains(
-        property: r'vehicleLicenePlate',
+        property: r'vehicleLicensePlate',
         value: value,
         caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterFilterCondition>
-      vehicleLicenePlateMatches(String pattern, {bool caseSensitive = true}) {
+  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterFilterCondition> vehicleLicensePlateMatches(String pattern, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.matches(
-        property: r'vehicleLicenePlate',
+        property: r'vehicleLicensePlate',
         wildcard: pattern,
         caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterFilterCondition>
-      vehicleLicenePlateIsEmpty() {
+  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterFilterCondition> vehicleLicensePlateIsEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'vehicleLicenePlate',
+        property: r'vehicleLicensePlate',
         value: '',
       ));
     });
   }
 
-  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterFilterCondition>
-      vehicleLicenePlateIsNotEmpty() {
+  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterFilterCondition> vehicleLicensePlateIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
-        property: r'vehicleLicenePlate',
+        property: r'vehicleLicensePlate',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterFilterCondition> vehicleModelEqualTo(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'vehicleModel',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterFilterCondition> vehicleModelGreaterThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'vehicleModel',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterFilterCondition> vehicleModelLessThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'vehicleModel',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterFilterCondition> vehicleModelBetween(
+    String lower,
+    String upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'vehicleModel',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterFilterCondition> vehicleModelStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'vehicleModel',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterFilterCondition> vehicleModelEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'vehicleModel',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterFilterCondition> vehicleModelContains(String value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'vehicleModel',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterFilterCondition> vehicleModelMatches(String pattern, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'vehicleModel',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterFilterCondition> vehicleModelIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'vehicleModel',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterFilterCondition> vehicleModelIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'vehicleModel',
         value: '',
       ));
     });
   }
 }
 
-extension ParkingRecordModelQueryObject
-    on QueryBuilder<ParkingRecordModel, ParkingRecordModel, QFilterCondition> {}
+extension ParkingRecordModelQueryObject on QueryBuilder<ParkingRecordModel, ParkingRecordModel, QFilterCondition> {}
 
-extension ParkingRecordModelQueryLinks
-    on QueryBuilder<ParkingRecordModel, ParkingRecordModel, QFilterCondition> {}
+extension ParkingRecordModelQueryLinks on QueryBuilder<ParkingRecordModel, ParkingRecordModel, QFilterCondition> {}
 
-extension ParkingRecordModelQuerySortBy
-    on QueryBuilder<ParkingRecordModel, ParkingRecordModel, QSortBy> {
-  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterSortBy>
-      sortByEntryTime() {
+extension ParkingRecordModelQuerySortBy on QueryBuilder<ParkingRecordModel, ParkingRecordModel, QSortBy> {
+  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterSortBy> sortByEntryTime() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'entryTime', Sort.asc);
     });
   }
 
-  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterSortBy>
-      sortByEntryTimeDesc() {
+  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterSortBy> sortByEntryTimeDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'entryTime', Sort.desc);
     });
   }
 
-  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterSortBy>
-      sortByExitTime() {
+  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterSortBy> sortByExitTime() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'exitTime', Sort.asc);
     });
   }
 
-  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterSortBy>
-      sortByExitTimeDesc() {
+  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterSortBy> sortByExitTimeDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'exitTime', Sort.desc);
     });
   }
 
-  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterSortBy>
-      sortByParkingRecordId() {
+  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterSortBy> sortByParkingRecordId() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'parkingRecordId', Sort.asc);
     });
   }
 
-  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterSortBy>
-      sortByParkingRecordIdDesc() {
+  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterSortBy> sortByParkingRecordIdDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'parkingRecordId', Sort.desc);
     });
   }
 
-  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterSortBy>
-      sortByParkingSlotId() {
+  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterSortBy> sortByParkingSlotNumber() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'parkingSlotId', Sort.asc);
+      return query.addSortBy(r'parkingSlotNumber', Sort.asc);
     });
   }
 
-  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterSortBy>
-      sortByParkingSlotIdDesc() {
+  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterSortBy> sortByParkingSlotNumberDesc() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'parkingSlotId', Sort.desc);
+      return query.addSortBy(r'parkingSlotNumber', Sort.desc);
     });
   }
 
-  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterSortBy>
-      sortByVehicleBrandModel() {
+  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterSortBy> sortByVehicleBrand() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'vehicleBrandModel', Sort.asc);
+      return query.addSortBy(r'vehicleBrand', Sort.asc);
     });
   }
 
-  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterSortBy>
-      sortByVehicleBrandModelDesc() {
+  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterSortBy> sortByVehicleBrandDesc() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'vehicleBrandModel', Sort.desc);
+      return query.addSortBy(r'vehicleBrand', Sort.desc);
     });
   }
 
-  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterSortBy>
-      sortByVehicleId() {
+  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterSortBy> sortByVehicleId() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'vehicleId', Sort.asc);
     });
   }
 
-  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterSortBy>
-      sortByVehicleIdDesc() {
+  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterSortBy> sortByVehicleIdDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'vehicleId', Sort.desc);
     });
   }
 
-  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterSortBy>
-      sortByVehicleLicenePlate() {
+  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterSortBy> sortByVehicleLicensePlate() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'vehicleLicenePlate', Sort.asc);
+      return query.addSortBy(r'vehicleLicensePlate', Sort.asc);
     });
   }
 
-  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterSortBy>
-      sortByVehicleLicenePlateDesc() {
+  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterSortBy> sortByVehicleLicensePlateDesc() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'vehicleLicenePlate', Sort.desc);
+      return query.addSortBy(r'vehicleLicensePlate', Sort.desc);
+    });
+  }
+
+  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterSortBy> sortByVehicleModel() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'vehicleModel', Sort.asc);
+    });
+  }
+
+  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterSortBy> sortByVehicleModelDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'vehicleModel', Sort.desc);
     });
   }
 }
 
-extension ParkingRecordModelQuerySortThenBy
-    on QueryBuilder<ParkingRecordModel, ParkingRecordModel, QSortThenBy> {
-  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterSortBy>
-      thenByEntryTime() {
+extension ParkingRecordModelQuerySortThenBy on QueryBuilder<ParkingRecordModel, ParkingRecordModel, QSortThenBy> {
+  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterSortBy> thenByEntryTime() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'entryTime', Sort.asc);
     });
   }
 
-  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterSortBy>
-      thenByEntryTimeDesc() {
+  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterSortBy> thenByEntryTimeDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'entryTime', Sort.desc);
     });
   }
 
-  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterSortBy>
-      thenByExitTime() {
+  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterSortBy> thenByExitTime() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'exitTime', Sort.asc);
     });
   }
 
-  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterSortBy>
-      thenByExitTimeDesc() {
+  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterSortBy> thenByExitTimeDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'exitTime', Sort.desc);
     });
   }
 
-  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterSortBy>
-      thenById() {
+  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterSortBy> thenById() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'id', Sort.asc);
     });
   }
 
-  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterSortBy>
-      thenByIdDesc() {
+  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterSortBy> thenByIdDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'id', Sort.desc);
     });
   }
 
-  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterSortBy>
-      thenByParkingRecordId() {
+  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterSortBy> thenByParkingRecordId() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'parkingRecordId', Sort.asc);
     });
   }
 
-  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterSortBy>
-      thenByParkingRecordIdDesc() {
+  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterSortBy> thenByParkingRecordIdDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'parkingRecordId', Sort.desc);
     });
   }
 
-  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterSortBy>
-      thenByParkingSlotId() {
+  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterSortBy> thenByParkingSlotNumber() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'parkingSlotId', Sort.asc);
+      return query.addSortBy(r'parkingSlotNumber', Sort.asc);
     });
   }
 
-  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterSortBy>
-      thenByParkingSlotIdDesc() {
+  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterSortBy> thenByParkingSlotNumberDesc() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'parkingSlotId', Sort.desc);
+      return query.addSortBy(r'parkingSlotNumber', Sort.desc);
     });
   }
 
-  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterSortBy>
-      thenByVehicleBrandModel() {
+  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterSortBy> thenByVehicleBrand() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'vehicleBrandModel', Sort.asc);
+      return query.addSortBy(r'vehicleBrand', Sort.asc);
     });
   }
 
-  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterSortBy>
-      thenByVehicleBrandModelDesc() {
+  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterSortBy> thenByVehicleBrandDesc() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'vehicleBrandModel', Sort.desc);
+      return query.addSortBy(r'vehicleBrand', Sort.desc);
     });
   }
 
-  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterSortBy>
-      thenByVehicleId() {
+  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterSortBy> thenByVehicleId() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'vehicleId', Sort.asc);
     });
   }
 
-  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterSortBy>
-      thenByVehicleIdDesc() {
+  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterSortBy> thenByVehicleIdDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'vehicleId', Sort.desc);
     });
   }
 
-  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterSortBy>
-      thenByVehicleLicenePlate() {
+  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterSortBy> thenByVehicleLicensePlate() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'vehicleLicenePlate', Sort.asc);
+      return query.addSortBy(r'vehicleLicensePlate', Sort.asc);
     });
   }
 
-  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterSortBy>
-      thenByVehicleLicenePlateDesc() {
+  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterSortBy> thenByVehicleLicensePlateDesc() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'vehicleLicenePlate', Sort.desc);
+      return query.addSortBy(r'vehicleLicensePlate', Sort.desc);
+    });
+  }
+
+  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterSortBy> thenByVehicleModel() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'vehicleModel', Sort.asc);
+    });
+  }
+
+  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QAfterSortBy> thenByVehicleModelDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'vehicleModel', Sort.desc);
     });
   }
 }
 
-extension ParkingRecordModelQueryWhereDistinct
-    on QueryBuilder<ParkingRecordModel, ParkingRecordModel, QDistinct> {
-  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QDistinct>
-      distinctByEntryTime() {
+extension ParkingRecordModelQueryWhereDistinct on QueryBuilder<ParkingRecordModel, ParkingRecordModel, QDistinct> {
+  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QDistinct> distinctByEntryTime() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'entryTime');
     });
   }
 
-  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QDistinct>
-      distinctByExitTime() {
+  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QDistinct> distinctByExitTime() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'exitTime');
     });
   }
 
-  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QDistinct>
-      distinctByParkingRecordId() {
+  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QDistinct> distinctByParkingRecordId() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'parkingRecordId');
     });
   }
 
-  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QDistinct>
-      distinctByParkingSlotId() {
+  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QDistinct> distinctByParkingSlotNumber() {
     return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'parkingSlotId');
+      return query.addDistinctBy(r'parkingSlotNumber');
     });
   }
 
-  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QDistinct>
-      distinctByVehicleBrandModel({bool caseSensitive = true}) {
+  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QDistinct> distinctByVehicleBrand({bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'vehicleBrandModel',
-          caseSensitive: caseSensitive);
+      return query.addDistinctBy(r'vehicleBrand', caseSensitive: caseSensitive);
     });
   }
 
-  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QDistinct>
-      distinctByVehicleId() {
+  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QDistinct> distinctByVehicleId() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'vehicleId');
     });
   }
 
-  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QDistinct>
-      distinctByVehicleLicenePlate({bool caseSensitive = true}) {
+  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QDistinct> distinctByVehicleLicensePlate({bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'vehicleLicenePlate',
-          caseSensitive: caseSensitive);
+      return query.addDistinctBy(r'vehicleLicensePlate', caseSensitive: caseSensitive);
+    });
+  }
+
+  QueryBuilder<ParkingRecordModel, ParkingRecordModel, QDistinct> distinctByVehicleModel({bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'vehicleModel', caseSensitive: caseSensitive);
     });
   }
 }
 
-extension ParkingRecordModelQueryProperty
-    on QueryBuilder<ParkingRecordModel, ParkingRecordModel, QQueryProperty> {
+extension ParkingRecordModelQueryProperty on QueryBuilder<ParkingRecordModel, ParkingRecordModel, QQueryProperty> {
   QueryBuilder<ParkingRecordModel, int, QQueryOperations> idProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'id');
     });
   }
 
-  QueryBuilder<ParkingRecordModel, DateTime, QQueryOperations>
-      entryTimeProperty() {
+  QueryBuilder<ParkingRecordModel, DateTime, QQueryOperations> entryTimeProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'entryTime');
     });
   }
 
-  QueryBuilder<ParkingRecordModel, DateTime?, QQueryOperations>
-      exitTimeProperty() {
+  QueryBuilder<ParkingRecordModel, DateTime?, QQueryOperations> exitTimeProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'exitTime');
     });
   }
 
-  QueryBuilder<ParkingRecordModel, int, QQueryOperations>
-      parkingRecordIdProperty() {
+  QueryBuilder<ParkingRecordModel, int, QQueryOperations> parkingRecordIdProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'parkingRecordId');
     });
   }
 
-  QueryBuilder<ParkingRecordModel, int, QQueryOperations>
-      parkingSlotIdProperty() {
+  QueryBuilder<ParkingRecordModel, int, QQueryOperations> parkingSlotNumberProperty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'parkingSlotId');
+      return query.addPropertyName(r'parkingSlotNumber');
     });
   }
 
-  QueryBuilder<ParkingRecordModel, String, QQueryOperations>
-      vehicleBrandModelProperty() {
+  QueryBuilder<ParkingRecordModel, String, QQueryOperations> vehicleBrandProperty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'vehicleBrandModel');
+      return query.addPropertyName(r'vehicleBrand');
     });
   }
 
@@ -1187,10 +1246,15 @@ extension ParkingRecordModelQueryProperty
     });
   }
 
-  QueryBuilder<ParkingRecordModel, String, QQueryOperations>
-      vehicleLicenePlateProperty() {
+  QueryBuilder<ParkingRecordModel, String, QQueryOperations> vehicleLicensePlateProperty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'vehicleLicenePlate');
+      return query.addPropertyName(r'vehicleLicensePlate');
+    });
+  }
+
+  QueryBuilder<ParkingRecordModel, String, QQueryOperations> vehicleModelProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'vehicleModel');
     });
   }
 }
