@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class ParkingHistoryPage extends StatelessWidget {
-  const ParkingHistoryPage({super.key});
+class ParkingRecordPage extends StatelessWidget {
+  const ParkingRecordPage({super.key});
 
   @override
   Widget build(BuildContext context) {

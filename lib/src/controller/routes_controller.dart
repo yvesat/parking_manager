@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-import '../view/pages/parking_history_page.dart';
+import '../view/pages/parking_record_page.dart';
 import '../view/pages/parking_slot_grid_page.dart';
 import '../view/pages/registration_pages/parking_slot_reg_page.dart';
 import '../view/pages/root_navigation_page.dart';
@@ -61,7 +61,7 @@ final router = GoRouter(
             GoRoute(
               path: '/history',
               pageBuilder: (context, state) => const NoTransitionPage(
-                child: ParkingHistoryPage(),
+                child: ParkingRecordPage(),
               ),
             ),
           ],
