@@ -46,12 +46,13 @@ class ParkingSlotModelNotifier extends StateNotifier<List<ParkingSlotModel>> {
     final newParkingSlot = ParkingSlotModel(parkingSlotNumber: newParkingSlotNumber);
 
     state = [...state, newParkingSlot];
-
+    _sortParkingSlotState();
     return newParkingSlot;
   }
 
   void loadParkingSlotData(ParkingSlotModel parkingSlot) {
     state = [...state, parkingSlot];
+    _sortParkingSlotState();
   }
 
   ParkingSlotModel? getParkingSlot(int parkingSlotNumber) {
@@ -70,11 +71,18 @@ class ParkingSlotModelNotifier extends StateNotifier<List<ParkingSlotModel>> {
           parkingSlotState,
     ];
 
+    _sortParkingSlotState();
+
     return state.firstWhereOrNull((element) => element.parkingSlotNumber == parkingSlotNumber);
   }
 
   void removeParkingSlot(ParkingSlotModel parkingSlot) {
     state = state.where((e) => e.parkingSlotNumber != parkingSlot.parkingSlotNumber).toList();
+    _sortParkingSlotState();
+  }
+
+  void _sortParkingSlotState() {
+    state.sort((a, b) => a.parkingSlotNumber.compareTo(b.parkingSlotNumber));
   }
 }
 
