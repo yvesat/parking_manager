@@ -1,10 +1,10 @@
 // ignore_for_file: use_build_context_synchronously
-import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:parking_manager/src/model/parking_slot_model.dart';
-import 'package:parking_manager/src/model/vehicle_model.dart';
 
+import '../model/parking_record_model.dart';
+import '../model/parking_slot_model.dart';
 import '../model/services/isar_service.dart';
+import '../model/vehicle_model.dart';
 import '../view/widgets/alert.dart';
 
 class DataSyncController extends StateNotifier<AsyncValue<void>> {
@@ -27,6 +27,12 @@ class DataSyncController extends StateNotifier<AsyncValue<void>> {
 
       for (final parkingSlot in parkingSlotListFromDB) {
         ref.read(parkingSlotProvider.notifier).loadParkingSlotData(parkingSlot);
+      }
+
+      final parkingRecordListFromDB = await isarService.getParkingRecordDB();
+
+      for (final parkingRecord in parkingRecordListFromDB) {
+        ref.read(parkingRecordProvider.notifier).loadParkingRecord(parkingRecord);
       }
     } catch (e) {
     } finally {
