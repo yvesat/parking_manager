@@ -42,6 +42,10 @@ class ParkingSlotController extends StateNotifier<AsyncValue<void>> {
     return ref.watch(parkingSlotProvider);
   }
 
+  ParkingSlotModel? isVehiceParked(WidgetRef ref, int vehicleId) {
+    return ref.read(parkingSlotProvider.notifier).checkParkedVehicle(vehicleId);
+  }
+
   Future<void> setVehicleEntry(WidgetRef ref, BuildContext context, int? vehicleId, int parkingSlotNumber) async {
     await _setVehicleEntryExit(ref, context, vehicleId, parkingSlotNumber);
   }

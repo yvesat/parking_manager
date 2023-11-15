@@ -71,6 +71,7 @@ class _ParkingSlotControlPageState extends ConsumerState<ParkingSlotControlPage>
                       },
                       onSelected: (VehicleModel selection) async {
                         SystemChannels.textInput.invokeMethod('TextInput.hide');
+
                         setState(() {
                           _selectedVehicleId = selection.vehicleId;
                         });
@@ -92,14 +93,23 @@ class _ParkingSlotControlPageState extends ConsumerState<ParkingSlotControlPage>
             VehicleDetailCard(vehicleId: _selectedVehicleId ?? vehicle?.vehicleId),
             const SizedBox(height: 20),
             ElevatedButton(
+              //Habilita botão caso o usuário já tenha selecionado um veículo pelo autocomplete ou
+              //quando a vaga já está ocupada e o veículo já foi preenchido.
               onPressed: _selectedVehicleId != null || vehicle != null
                   ? () async {
+                      //Caso a vaga esteja disponível, faz as validações necessárias e aloca o veículo a vaga
                       if (parkingSlotState.available) {
-                        await parkingSlotController.setVehicleEntry(ref, context, _selectedVehicleId, parkingSlotState.parkingSlotNumber);
-                        if (context.mounted) {
-                          alert.snack(context, "Veículo alocado a vaga ${widget.parkingSlotNumber}.");
-                          context.pop();
+                        final vehicleParkedAtSlot = parkingSlotController.isVehiceParked(ref, _selectedVehicleId!);
+                        if (vehicleParkedAtSlot == null) {
+                          await parkingSlotController.setVehicleEntry(ref, context, _selectedVehicleId, parkingSlotState.parkingSlotNumber);
+                          if (context.mounted) {
+                            alert.snack(context, "Veículo alocado a vaga ${widget.parkingSlotNumber}.");
+                            context.pop();
+                          }
+                        } else {
+                          if (context.mounted) alert.snack(context, "Veículo já está estacionado na vaga ${vehicleParkedAtSlot.parkingSlotNumber}.");
                         }
+                        //Caso a vaga esteja indisponível, faz a retirada do veículo da vaga
                       } else {
                         await parkingSlotController.setVehicleExit(ref, context, parkingSlotState.parkingSlotNumber);
                         if (context.mounted) {

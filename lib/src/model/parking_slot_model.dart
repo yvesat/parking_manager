@@ -50,6 +50,10 @@ class ParkingSlotModelNotifier extends StateNotifier<List<ParkingSlotModel>> {
     return newParkingSlot;
   }
 
+  ParkingSlotModel? checkParkedVehicle(int vehicleId) {
+    return state.firstWhereOrNull((e) => e.occupyingVehicleId == vehicleId);
+  }
+
   void loadParkingSlotData(ParkingSlotModel parkingSlot) {
     state = [...state, parkingSlot];
     _sortParkingSlotState();
