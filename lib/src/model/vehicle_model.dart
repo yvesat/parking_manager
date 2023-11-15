@@ -67,10 +67,6 @@ class VehicleModelNotifier extends StateNotifier<List<VehicleModel>> {
     state = [...state, vehicle];
   }
 
-  VehicleModel? getVehicle(int vehicleId) {
-    return state.firstWhereOrNull((e) => e.vehicleId == vehicleId);
-  }
-
   List<String> getLicensePlateList() {
     List<String> licensePlateList = [];
 
@@ -82,19 +78,20 @@ class VehicleModelNotifier extends StateNotifier<List<VehicleModel>> {
   }
 
   VehicleModel? searchVehicleByLP(String licensePlate) {
-    final normalizedSearch = licensePlate.toUpperCase();
-    return state.firstWhereOrNull((e) => e.licensePlate == normalizedSearch);
+    return state.firstWhereOrNull((e) => e.licensePlate == licensePlate);
   }
 
   List<VehicleModel> getVehicleState() {
     return state;
   }
 
-  void editVehicle(VehicleModel vehicle, String? brand, String? model, String? licensePlate) {
+  VehicleModel editVehicle(VehicleModel vehicle, String? brand, String? model, String? licensePlate) {
     state = [
       for (final vehicleState in state)
         if (vehicleState.vehicleId == vehicle.vehicleId) vehicleState.copyWith(brand: brand, model: model, licensePlate: licensePlate) else vehicleState,
     ];
+
+    return state.firstWhere((e) => e.vehicleId == vehicle.vehicleId);
   }
 
   void removeVehicle(VehicleModel vehicle) {
