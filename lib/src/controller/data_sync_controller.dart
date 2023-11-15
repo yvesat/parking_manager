@@ -17,15 +17,16 @@ class DataSyncController extends StateNotifier<AsyncValue<void>> {
     try {
       state = const AsyncValue.loading();
 
-      final parkingSlotListFromDB = await isarService.getParkingSlotListDB();
-
-      for (final parkingSlot in parkingSlotListFromDB) {
-        ref.read(parkingSlotProvider.notifier).loadParkingSlotData(parkingSlot);
-      }
       final vehicleListFromDB = await isarService.getVehicleListDB();
 
       for (final vehicle in vehicleListFromDB) {
         ref.read(vehicleProvider.notifier).loadVehicleData(vehicle);
+      }
+
+      final parkingSlotListFromDB = await isarService.getParkingSlotListDB();
+
+      for (final parkingSlot in parkingSlotListFromDB) {
+        ref.read(parkingSlotProvider.notifier).loadParkingSlotData(parkingSlot);
       }
     } catch (e) {
     } finally {
