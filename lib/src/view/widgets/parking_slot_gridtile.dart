@@ -47,9 +47,15 @@ class ParkingSlotGridTile extends ConsumerWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           const SizedBox(height: 8),
-                          Text("${vehicleState!.brand} ${vehicleState.model}"),
+                          Text(
+                            "${vehicleState!.brand} ${vehicleState.model}",
+                            overflow: TextOverflow.ellipsis,
+                          ),
                           const SizedBox(height: 4),
-                          Text(vehicleState.licensePlate),
+                          Text(
+                            vehicleState.licensePlate,
+                            overflow: TextOverflow.ellipsis,
+                          ),
                         ],
                       ),
                     ),
@@ -57,8 +63,9 @@ class ParkingSlotGridTile extends ConsumerWidget {
                     const Padding(
                       padding: EdgeInsets.only(top: 16),
                       child: Text(
-                        "Vaga disponível!",
+                        "Vaga disponível",
                         style: TextStyle(fontWeight: FontWeight.bold),
+                        overflow: TextOverflow.ellipsis,
                       ),
                     ),
                 ],

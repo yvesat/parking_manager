@@ -34,9 +34,12 @@ class VehicleDetailCard extends ConsumerWidget {
                     color: Theme.of(context).colorScheme.primary,
                   ),
                   const SizedBox(width: 32),
-                  Text(
-                    vehicle == null ? "Marca" : vehicle.brand,
-                    style: const TextStyle(fontSize: 16),
+                  Expanded(
+                    child: Text(
+                      vehicle == null ? "Marca" : vehicle.brand,
+                      style: const TextStyle(fontSize: 16),
+                      overflow: TextOverflow.ellipsis,
+                    ),
                   ),
                 ],
               ),
@@ -51,9 +54,12 @@ class VehicleDetailCard extends ConsumerWidget {
                     color: Theme.of(context).colorScheme.primary,
                   ),
                   const SizedBox(width: 32),
-                  Text(
-                    vehicle == null ? "Modelo" : vehicle.model,
-                    style: const TextStyle(fontSize: 16),
+                  Expanded(
+                    child: Text(
+                      vehicle == null ? "Modelo" : vehicle.model,
+                      style: const TextStyle(fontSize: 16),
+                      overflow: TextOverflow.ellipsis,
+                    ),
                   ),
                 ],
               ),
@@ -68,9 +74,12 @@ class VehicleDetailCard extends ConsumerWidget {
                     color: Theme.of(context).colorScheme.primary,
                   ),
                   const SizedBox(width: 32),
-                  Text(
-                    vehicle == null ? "Placa" : vehicle.licensePlate,
-                    style: const TextStyle(fontSize: 16),
+                  Expanded(
+                    child: Text(
+                      vehicle == null ? "Placa" : vehicle.licensePlate,
+                      style: const TextStyle(fontSize: 16),
+                      overflow: TextOverflow.ellipsis,
+                    ),
                   ),
                 ],
               ),
