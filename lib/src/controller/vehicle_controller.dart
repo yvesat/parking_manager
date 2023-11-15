@@ -27,7 +27,7 @@ class VehicleController extends StateNotifier<AsyncValue<void>> {
 
       if (vehicleExists != null) throw Exception("Placa do veículo já tem cadastro!");
 
-      final newVehicle = vehicleState.createVehicle(brand, model, normalizedSearch);
+      final newVehicle = vehicleState.createVehicle(brand.trim(), model.trim(), normalizedSearch);
       await isarService.saveVehicleDB(newVehicle);
 
       if (context.mounted) alert.snack(context, "Veículo ${newVehicle.brand} ${newVehicle.model} criado!");

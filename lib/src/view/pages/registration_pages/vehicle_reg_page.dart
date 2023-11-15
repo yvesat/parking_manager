@@ -66,6 +66,7 @@ class _VehicleRegPageState extends ConsumerState<VehicleRegPage> {
                 textController: _brandController,
                 icon: FontAwesomeIcons.industry,
                 label: 'Marca',
+                capitalization: TextCapitalization.words,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Informe a marca';
@@ -78,6 +79,7 @@ class _VehicleRegPageState extends ConsumerState<VehicleRegPage> {
                 textController: _modelController,
                 icon: FontAwesomeIcons.car,
                 label: 'Modelo',
+                capitalization: TextCapitalization.words,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Informe o modelo';
@@ -90,6 +92,7 @@ class _VehicleRegPageState extends ConsumerState<VehicleRegPage> {
                 textController: _licensePlateController,
                 icon: FontAwesomeIcons.circleInfo,
                 label: 'Placa',
+                capitalization: TextCapitalization.characters,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Informe a placa do veículo';
