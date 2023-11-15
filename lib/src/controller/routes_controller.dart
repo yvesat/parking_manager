@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:parking_manager/src/view/pages/registration_pages/vehicle_reg_page.dart';
 
 import '../view/pages/parking_history_page.dart';
 import '../view/pages/parking_slot_grid_page.dart';
 import '../view/pages/registration_pages/parking_slot_reg_page.dart';
 import '../view/pages/root_navigation_page.dart';
+import '../view/pages/vehicle_list_page.dart';
 
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
 final _shellNavigatorParkingSlotsKey = GlobalKey<NavigatorState>(debugLabel: 'parkingSlots');
@@ -30,14 +30,6 @@ final router = GoRouter(
               pageBuilder: (context, state) => const NoTransitionPage(
                 child: ParkingSlotGridPage(),
               ),
-              // routes: [
-              //   GoRoute(
-              //     path: 'parkingSlotControl',
-              //     pageBuilder: (context, state) => NoTransitionPage(
-              //       child: ParkingSlotControlPage(int.parse(state.uri.queryParameters['parkingSlotNumber']!)),
-              //     ),
-              //   ),
-              // ],
             ),
           ],
         ),
@@ -46,7 +38,9 @@ final router = GoRouter(
           routes: [
             GoRoute(
               path: '/parkingSlotReg',
-              builder: (context, state) => const ParkingSlotRegPage(),
+              pageBuilder: (context, state) => const NoTransitionPage(
+                child: ParkingSlotRegPage(),
+              ),
             ),
           ],
         ),
@@ -54,8 +48,10 @@ final router = GoRouter(
           navigatorKey: _shellNavigatorRegistrationKey,
           routes: [
             GoRoute(
-              path: '/vehicleReg',
-              builder: (context, state) => const VehicleRegPage(),
+              path: '/vehicleList',
+              pageBuilder: (context, state) => const NoTransitionPage(
+                child: VehicleListPage(),
+              ),
             ),
           ],
         ),
