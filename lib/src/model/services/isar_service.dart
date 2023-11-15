@@ -39,7 +39,7 @@ class IsarService {
   }
 
   //Parking Slot database opertaions
-  Future<void> saveParkingslotDB(ParkingSlotModel parkingslot) async {
+  Future<void> saveParkingSlotDB(ParkingSlotModel parkingslot) async {
     final isar = await db;
 
     await removeParkingSlotDB(parkingslot);
@@ -65,6 +65,13 @@ class IsarService {
   }
 
   //Parking Record database opertaions
+  Future<void> saveParkingRecordDB(ParkingRecordModel parkingRecord) async {
+    final isar = await db;
+
+    await removeParkingRecordDB(parkingRecord);
+    await isar.writeTxn(() async => await isar.parkingRecordModels.put(parkingRecord));
+  }
+
   Future<ParkingRecordModel?> getParkingRecordByIdDB(int parkingRecordId) async {
     final isar = await db;
     ParkingRecordModel? parkingRecord = await isar.parkingRecordModels.filter().parkingRecordIdEqualTo(parkingRecordId).findFirst();
