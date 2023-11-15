@@ -18,7 +18,16 @@ class ParkingSlotRegTile extends HookConsumerWidget {
           FontAwesomeIcons.carSide,
           color: parkingSlot!.available ? Colors.green : Colors.red,
         ),
-        title: Text("Vaga $parkingSlotId - ${parkingSlot.available ? '(Disponível)' : '(Ocupada)'}"),
+        title: Row(
+          children: [
+            Text(
+              "Vaga $parkingSlotId",
+              maxLines: 1,
+            ),
+            const Spacer(),
+            Text(parkingSlot.available ? "(Disponível)" : "(Ocupada)"),
+          ],
+        ),
         trailing: IconButton(
           onPressed: onPressed,
           icon: const FaIcon(FontAwesomeIcons.trash),
