@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:parking_manager/src/controller/parking_slot_controller.dart';
-import 'package:parking_manager/src/controller/vehicle_controller.dart';
 
+import '../../controller/parking_slot_controller.dart';
+import '../../controller/vehicle_controller.dart';
 import '../pages/parking_slot_control_page.dart';
 
 class ParkingSlotGridTile extends ConsumerWidget {
@@ -15,8 +15,7 @@ class ParkingSlotGridTile extends ConsumerWidget {
     final parkingSlotController = ref.read(parkingSlotControllerProvider.notifier);
     final parkingSlotState = parkingSlotController.getParkingSlot(ref, context, parkingslotNumber);
 
-    final vehicleController = ref.read(vehicleControllerProvider.notifier);
-    final vehicleState = vehicleController.getVehicle(ref, parkingSlotState!.occupyingVehicleId);
+    final vehicleState = ref.watch(vehicleControllerProvider.notifier).getVehicle(ref, parkingSlotState!.occupyingVehicleId);
 
     return ClipRRect(
       borderRadius: BorderRadius.circular(10),
