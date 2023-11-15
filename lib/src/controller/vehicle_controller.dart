@@ -2,10 +2,11 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:parking_manager/src/model/vehicle_model.dart';
 
 import '../model/enum/alert_type.dart';
+import '../model/parking_slot_model.dart';
 import '../model/services/isar_service.dart';
+import '../model/vehicle_model.dart';
 import '../view/widgets/alert.dart';
 
 class VehicleController extends StateNotifier<AsyncValue<void>> {
@@ -24,15 +25,14 @@ class VehicleController extends StateNotifier<AsyncValue<void>> {
 
       final vehicleExists = ref.read(vehicleProvider.notifier).searchVehicleByLP(normalizedSearch);
 
-      if (vehicleExists != null) {
-        final newVehicle = vehicleState.createVehicle(brand, model, normalizedSearch);
-        await isarService.saveVehicleDB(newVehicle);
-        if (context.mounted) alert.snack(context, "Veículo ${newVehicle.brand} ${newVehicle.model} criado!");
-      } else {
-        throw Exception("Placa do veículo já tem cadastro!");
-      }
+      if (vehicleExists != null) throw Exception("Placa do veículo já tem cadastro!");
+
+      final newVehicle = vehicleState.createVehicle(brand, model, normalizedSearch);
+      await isarService.saveVehicleDB(newVehicle);
+
+      if (context.mounted) alert.snack(context, "Veículo ${newVehicle.brand} ${newVehicle.model} criado!");
     } catch (e) {
-      if (context.mounted) alert.snack(context, e.toString());
+      rethrow;
     } finally {
       state = const AsyncValue.data(null);
     }
@@ -57,30 +57,29 @@ class VehicleController extends StateNotifier<AsyncValue<void>> {
     try {
       final vehicleState = ref.read(vehicleProvider.notifier);
 
-      if (context.mounted) {
-        await alert.dialog(
-          context,
-          AlertType.warning,
-          "Confirmar exclusão do veículo de placa ${vehicle.licensePlate}?",
-          onPress: () async {
-            state = const AsyncValue.loading();
+      alert.dialog(
+        context,
+        AlertType.warning,
+        "Confirmar exclusão do veículo de placa ${vehicle.licensePlate}?",
+        onPress: () async {
+          state = const AsyncValue.loading();
 
-            final removedVehicleLicensePlate = vehicle.licensePlate;
+          final vehicleIsParked = ref.read(parkingSlotProvider).firstWhereOrNull((e) => e.occupyingVehicleId == vehicle.vehicleId);
+          if (vehicleIsParked != null) throw Exception("Veículo está estacionado. Registre saída antes de excluir.");
 
-            vehicleState.removeVehicle(vehicle);
-            await isarService.removeVehicleDB(vehicle);
+          final removedVehicleLicensePlate = vehicle.licensePlate;
 
-            if (context.mounted) alert.snack(context, "Veículo de placa $removedVehicleLicensePlate removido!");
-            if (context.mounted) context.pop();
-          },
-        );
-      }
+          vehicleState.removeVehicle(vehicle);
+          await isarService.removeVehicleDB(vehicle);
 
-      if (context.mounted) alert.snack(context, "Veículo excluído!");
+          if (context.mounted) alert.snack(context, "Veículo de placa $removedVehicleLicensePlate removido!");
+        },
+      );
     } catch (e) {
-      if (context.mounted) alert.snack(context, e.toString());
+      alert.dialog(context, AlertType.error, e.toString());
     } finally {
       state = const AsyncValue.data(null);
+      if (context.mounted) context.pop();
     }
   }
 }

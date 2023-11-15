@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../../controller/vehicle_controller.dart';
@@ -7,7 +8,8 @@ import '../../widgets/alert.dart';
 import '../../widgets/vehicle_text_form_field.dart';
 
 class VehicleRegPage extends ConsumerStatefulWidget {
-  const VehicleRegPage({Key? key}) : super(key: key);
+  final int? vehicleId;
+  const VehicleRegPage({this.vehicleId, Key? key}) : super(key: key);
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _VehicleRegPageState();
@@ -23,12 +25,21 @@ class _VehicleRegPageState extends ConsumerState<VehicleRegPage> {
   Widget build(BuildContext context) {
     final Alert alert = Alert();
     final vehicleController = ref.read(vehicleControllerProvider.notifier);
+    final vehicleState = vehicleController.getVehicle(ref, widget.vehicleId);
+
+    if (widget.vehicleId != null) {
+      setState(() {
+        _brandController.text = vehicleState!.brand;
+        _modelController.text = vehicleState.model;
+        _licensePlateController.text = vehicleState.licensePlate;
+      });
+    }
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
         centerTitle: true,
-        title: const Text('Cadastro de Veículos'),
+        title: Text(widget.vehicleId != null ? 'Editar Veículo' : 'Cadastro de Veículos'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -84,18 +95,24 @@ class _VehicleRegPageState extends ConsumerState<VehicleRegPage> {
               ElevatedButton(
                 onPressed: () async {
                   if (_formKey.currentState!.validate()) {
-                    await vehicleController.createVehicle(context, ref, _brandController.text, _modelController.text, _licensePlateController.text.toUpperCase());
-
-                    _brandController.clear();
-                    _modelController.clear();
-                    _licensePlateController.clear();
+                    try {
+                      if (widget.vehicleId != null) {
+                        await vehicleController.editVehicle(context, ref, vehicleState!, _brandController.text, _modelController.text, _licensePlateController.text);
+                        if (context.mounted) context.pop();
+                      } else {
+                        await vehicleController.createVehicle(context, ref, _brandController.text, _modelController.text, _licensePlateController.text);
+                        if (context.mounted) context.pop();
+                      }
+                    } catch (e) {
+                      if (context.mounted) alert.snack(context, e.toString());
+                    }
                   } else {
                     alert.snack(context, "Favor preencher todos os dados.");
                   }
                 },
-                child: const Padding(
-                  padding: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-                  child: Text('Salvar Veículo'),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                  child: Text(widget.vehicleId == null ? 'Cadastrar Veículo' : 'Salvar Alterações'),
                 ),
               ),
             ],

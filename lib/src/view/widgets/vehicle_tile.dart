@@ -26,11 +26,12 @@ class VehicleRegTile extends HookConsumerWidget {
         subtitle: Text("Placa: ${vehicleState.licensePlate}"),
         trailing: PopupMenuButton<VehicleOption>(
           onSelected: (VehicleOption item) async {
-            if (item == VehicleOption.remove) {
-              await vehicleController.removeVehicle(context, ref, vehicleState);
-            }
             if (item == VehicleOption.edit) {
               if (context.mounted) Navigator.push(context, MaterialPageRoute(builder: (context) => VehicleRegPage(vehicleId: vehicleState.vehicleId)));
+            }
+
+            if (item == VehicleOption.remove) {
+              await vehicleController.removeVehicle(context, ref, vehicleState);
             }
           },
           itemBuilder: (BuildContext context) => <PopupMenuEntry<VehicleOption>>[

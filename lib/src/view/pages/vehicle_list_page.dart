@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:parking_manager/src/controller/vehicle_controller.dart';
 
+import '../../controller/vehicle_controller.dart';
 import '../widgets/vehicle_tile.dart';
+import 'registration_pages/vehicle_reg_page.dart';
 
 class VehicleListPage extends ConsumerWidget {
   const VehicleListPage({super.key});
@@ -19,7 +20,7 @@ class VehicleListPage extends ConsumerWidget {
         title: const Text('Lista de Veículos'),
         actions: [
           IconButton(
-            onPressed: () {},
+            onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => const VehicleRegPage())),
             icon: const FaIcon(
               FontAwesomeIcons.plus,
             ),
