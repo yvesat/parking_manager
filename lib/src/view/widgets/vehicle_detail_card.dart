@@ -21,7 +21,7 @@ class VehicleDetailCard extends ConsumerWidget {
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 8),
               child: Text(
-                "Veículo Selecionado:",
+                "Dados do Veículo:",
                 style: TextStyle(fontWeight: FontWeight.bold, color: Theme.of(context).colorScheme.primary),
               ),
             ),
