@@ -57,29 +57,39 @@ class VehicleController extends StateNotifier<AsyncValue<void>> {
     try {
       final vehicleState = ref.read(vehicleProvider.notifier);
 
-      alert.dialog(
+      await alert.dialog(
         context,
         AlertType.warning,
         "Confirmar exclusão do veículo de placa ${vehicle.licensePlate}?",
         onPress: () async {
-          state = const AsyncValue.loading();
+          try {
+            final vehicleIsParked = ref.read(parkingSlotProvider).firstWhereOrNull((e) => e.occupyingVehicleId == vehicle.vehicleId);
+            if (vehicleIsParked != null) throw Exception("Veículo está estacionado. Registre saída antes de excluir.");
 
-          final vehicleIsParked = ref.read(parkingSlotProvider).firstWhereOrNull((e) => e.occupyingVehicleId == vehicle.vehicleId);
-          if (vehicleIsParked != null) throw Exception("Veículo está estacionado. Registre saída antes de excluir.");
+            if (context.mounted) {
+              context.pop();
+              context.pop();
+            }
+          } catch (e) {
+            context.pop();
+            alert.snack(context, e.toString());
+            return;
+          }
 
           final removedVehicleLicensePlate = vehicle.licensePlate;
 
           vehicleState.removeVehicle(vehicle);
+
+          state = const AsyncValue.loading();
           await isarService.removeVehicleDB(vehicle);
 
           if (context.mounted) alert.snack(context, "Veículo de placa $removedVehicleLicensePlate removido!");
         },
       );
     } catch (e) {
-      alert.dialog(context, AlertType.error, e.toString());
+      if (context.mounted) alert.snack(context, e.toString());
     } finally {
       state = const AsyncValue.data(null);
-      if (context.mounted) context.pop();
     }
   }
 }

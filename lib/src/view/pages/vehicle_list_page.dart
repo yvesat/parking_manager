@@ -31,7 +31,10 @@ class VehicleListPage extends ConsumerWidget {
         padding: const EdgeInsets.all(16),
         child: ListView.builder(
           itemCount: vehicleState.length,
-          itemBuilder: (context, index) => VehicleRegTile(vehicleId: vehicleState[index].vehicleId, onPressed: () {}),
+          itemBuilder: (context, index) => VehicleRegTile(
+            vehicleId: vehicleState[index].vehicleId,
+            onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => VehicleRegPage(vehicleId: vehicleState[index].vehicleId))),
+          ),
         ),
       ),
     );

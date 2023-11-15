@@ -40,6 +40,12 @@ class _VehicleRegPageState extends ConsumerState<VehicleRegPage> {
       appBar: AppBar(
         centerTitle: true,
         title: Text(widget.vehicleId != null ? 'Editar Veículo' : 'Cadastro de Veículos'),
+        actions: [
+          IconButton(
+            onPressed: () async => await vehicleController.removeVehicle(context, ref, vehicleState!),
+            icon: const FaIcon(FontAwesomeIcons.trash),
+          ),
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -110,9 +116,9 @@ class _VehicleRegPageState extends ConsumerState<VehicleRegPage> {
                     alert.snack(context, "Favor preencher todos os dados.");
                   }
                 },
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-                  child: Text(widget.vehicleId == null ? 'Cadastrar Veículo' : 'Salvar Alterações'),
+                child: SizedBox(
+                  width: 200,
+                  child: Center(child: Text(widget.vehicleId == null ? 'Cadastrar Veículo' : 'Salvar Alterações')),
                 ),
               ),
             ],

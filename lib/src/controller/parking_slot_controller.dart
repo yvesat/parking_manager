@@ -64,8 +64,6 @@ class ParkingSlotController extends StateNotifier<AsyncValue<void>> {
 
   Future<void> removeParkingSlot(BuildContext context, WidgetRef ref, ParkingSlotModel parkingSlot) async {
     try {
-      state = const AsyncValue.loading();
-
       if (!parkingSlot.available) {
         await alert.snack(context, "A vaga está ocupada. Dê saída no veículo antes de fazer a exclusão");
         return;
@@ -81,6 +79,7 @@ class ParkingSlotController extends StateNotifier<AsyncValue<void>> {
 
             parkingSlotState.removeParkingSlot(parkingSlot);
 
+            state = const AsyncValue.loading();
             await isarService.removeParkingSlotDB(parkingSlot);
 
             if (context.mounted) alert.snack(context, "Vaga $removedParkingSlotNumber removida!");
