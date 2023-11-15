@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:parking_manager/src/model/enum/alert_type.dart';
 
 import '../model/parking_slot_model.dart';
 import '../model/services/isar_service.dart';
@@ -68,15 +70,24 @@ class ParkingSlotController extends StateNotifier<AsyncValue<void>> {
         await alert.snack(context, "A vaga está ocupada. Dê saída no veículo antes de fazer a exclusão");
         return;
       }
+      if (context.mounted) {
+        await alert.dialog(
+          context,
+          AlertType.warning,
+          "Confirmar exclusão da vaga ${parkingSlot.parkingSlotNumber}",
+          onPress: () async {
+            final removedParkingSlotNumber = parkingSlot.parkingSlotNumber;
+            final parkingSlotState = ref.read(parkingSlotProvider.notifier);
 
-      final removedParkingSlotNumber = parkingSlot.parkingSlotNumber;
-      final parkingSlotState = ref.read(parkingSlotProvider.notifier);
+            parkingSlotState.removeParkingSlot(parkingSlot);
 
-      parkingSlotState.removeParkingSlot(parkingSlot);
+            await isarService.removeParkingSlotDB(parkingSlot);
 
-      await isarService.removeParkingSlotDB(parkingSlot);
-
-      if (context.mounted) alert.snack(context, "Vaga $removedParkingSlotNumber removida!");
+            if (context.mounted) alert.snack(context, "Vaga $removedParkingSlotNumber removida!");
+            if (context.mounted) context.pop();
+          },
+        );
+      }
     } catch (e) {
       if (context.mounted) alert.snack(context, e.toString());
     } finally {
