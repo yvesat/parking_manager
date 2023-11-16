@@ -5,7 +5,6 @@ import 'package:intl/intl.dart';
 
 import '../../controller/parking_record_controllder.dart';
 import '../widgets/parking_record_tile.dart';
-import 'registration_pages/vehicle_reg_page.dart';
 
 class ParkingRecordPage extends ConsumerStatefulWidget {
   const ParkingRecordPage({super.key});
@@ -120,7 +119,6 @@ class _ParkingRecordPageState extends ConsumerState<ParkingRecordPage> {
                 itemCount: parkingRecordState.length,
                 itemBuilder: (context, index) => ParkingRecordTile(
                   parkingRecordId: parkingRecordState[index].parkingRecordId,
-                  onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => VehicleRegPage(vehicleId: parkingRecordState[index].vehicleId))),
                 ),
               ),
             ),
