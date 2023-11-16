@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:parking_manager/src/model/enum/alert_type.dart';
 
-import '../model/parking_record_model.dart';
+import '../model/enum/alert_type.dart';
 import '../model/parking_slot_model.dart';
 import '../model/services/isar_service.dart';
 import '../model/vehicle_model.dart';
 import '../view/widgets/alert.dart';
+import 'parking_record_controllder.dart';
 
 class ParkingSlotController extends StateNotifier<AsyncValue<void>> {
   ParkingSlotController() : super(const AsyncValue.data(null));
@@ -48,37 +48,6 @@ class ParkingSlotController extends StateNotifier<AsyncValue<void>> {
     return ref.read(parkingSlotProvider.notifier).checkParkedVehicle(vehicleId);
   }
 
-  ParkingRecordModel? getParkingRecordByParkSLNUM(WidgetRef ref, int parkingSlotNumber) {
-    return ref.read(parkingRecordProvider.notifier).getParkingRecordByParkSLNUM(parkingSlotNumber);
-  }
-
-  Future<DateTime?> setDate(BuildContext context, DateTime currentDate) async {
-    final DateTime? pickedDate = await showDatePicker(
-      context: context,
-      initialDate: currentDate,
-      firstDate: DateTime(2000),
-      lastDate: DateTime(2101),
-    );
-    if (pickedDate != null && pickedDate != currentDate) {
-      return pickedDate;
-    } else {
-      return null;
-    }
-  }
-
-  Future<DateTime?> setTime(BuildContext context, DateTime currentDate) async {
-    final TimeOfDay? selectedTime = await showTimePicker(
-      context: context,
-      initialTime: TimeOfDay.fromDateTime(currentDate),
-    );
-
-    if (selectedTime != null) {
-      return DateTime(currentDate.year, currentDate.day, selectedTime.hour, selectedTime.minute);
-    } else {
-      return null;
-    }
-  }
-
   Future<void> setVehicleEntry(WidgetRef ref, BuildContext context, int vehicleId, int parkingSlotNumber, DateTime entryDate) async {
     try {
       await _setVehicleEntryExit(ref, context, vehicleId, parkingSlotNumber);
@@ -86,8 +55,7 @@ class ParkingSlotController extends StateNotifier<AsyncValue<void>> {
 
       if (vehicle == null) throw Exception("Veículo não encontrado no estado da aplicação");
 
-      final newParkingRecord = ref.read(parkingRecordProvider.notifier).startParkingRecord(vehicle.vehicleId, vehicle.brand, vehicle.model, vehicle.licensePlate, parkingSlotNumber, entryDate);
-      await isarService.saveParkingRecordDB(newParkingRecord);
+      ref.read(parkingRecordControllerProvider.notifier).startParkingRecord(ref, vehicle, parkingSlotNumber, entryDate);
     } catch (e) {
       if (context.mounted) alert.snack(context, e.toString());
     } finally {
@@ -101,9 +69,7 @@ class ParkingSlotController extends StateNotifier<AsyncValue<void>> {
 
     if (vehicle == null) throw Exception("Veículo não encontrado no estado da aplicação");
 
-    final newParkingRecord = ref.read(parkingRecordProvider.notifier).endParkingRecord(parkingSlotNumber, exitDate);
-    if (newParkingRecord == null) throw Exception("Falha ao editar data de saída do veículo.");
-    await isarService.saveParkingRecordDB(newParkingRecord);
+    if (context.mounted) ref.read(parkingRecordControllerProvider.notifier).editParkingRecordDate(ref, context, parkingSlotNumber, null, exitDate);
   }
 
   Future<void> _setVehicleEntryExit(WidgetRef ref, BuildContext context, int? vehicleId, int parkingSlotNumber) async {

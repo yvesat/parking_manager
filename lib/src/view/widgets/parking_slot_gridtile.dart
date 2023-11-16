@@ -4,7 +4,8 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../controller/parking_slot_controller.dart';
 import '../../controller/vehicle_controller.dart';
-import '../pages/parking_slot_control_page.dart';
+import '../pages/parking_slot_exit_page.dart';
+import '../pages/parking_slot_entry_page.dart';
 
 class ParkingSlotGridTile extends ConsumerWidget {
   final int parkingslotNumber;
@@ -20,7 +21,11 @@ class ParkingSlotGridTile extends ConsumerWidget {
     return ClipRRect(
       borderRadius: BorderRadius.circular(10),
       child: InkWell(
-        onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => ParkingSlotControlPage(parkingslotNumber))),
+        onTap: () => Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => parkingSlotState.available ? ParkingSlotEntryPage(parkingslotNumber) : ParkingSlotExitPage(parkingslotNumber),
+            )),
         child: Card(
           elevation: 1.5,
           child: Padding(

@@ -86,16 +86,11 @@ class ParkingRecordModelNotifier extends StateNotifier<List<ParkingRecordModel>>
     state = [...state, parkingRecordModel];
   }
 
-  ParkingRecordModel? getParkingRecordByParkSLNUM(int parkingSlotNumber) {
-    return state.firstWhereOrNull((e) => e.parkingSlotNumber == parkingSlotNumber);
-  }
-
-  ParkingRecordModel? endParkingRecord(int parkingRecordId, DateTime exitDate) {
+  ParkingRecordModel? editParkingRecordDate(int parkingRecordId, DateTime? entryDate, DateTime? exitDate) {
     state = [
       for (final parkingRecord in state)
-        if (parkingRecord.parkingRecordId == parkingRecordId) parkingRecord.copyWith(exitDate: exitDate) else parkingRecord,
+        if (parkingRecord.parkingRecordId == parkingRecordId) parkingRecord.copyWith(entryDate: entryDate, exitDate: exitDate) else parkingRecord,
     ];
-
     return state.firstWhereOrNull((e) => e.parkingRecordId == parkingRecordId);
   }
 }
