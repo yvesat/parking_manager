@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:parking_manager/src/controller/parking_record_controllder.dart';
 
+import '../../controller/parking_record_controllder.dart';
 import '../widgets/parking_record_tile.dart';
 import 'registration_pages/vehicle_reg_page.dart';
 
