@@ -20,7 +20,7 @@ class ParkingSlotControlPage extends ConsumerStatefulWidget {
 }
 
 class _ParkingSlotControlPageState extends ConsumerState<ParkingSlotControlPage> {
-  DateTime? _entryDate = DateTime.now();
+  DateTime? _entryDate;
   DateTime _exitDate = DateTime.now();
   String _displayStringForOption(VehicleModel option) => "${option.brand} ${option.model} - ${option.licensePlate}";
   int? _selectedVehicleId;
@@ -38,7 +38,13 @@ class _ParkingSlotControlPageState extends ConsumerState<ParkingSlotControlPage>
 
     final parkingRecord = parkingSlotController.getParkingRecordByParkSLNUM(ref, parkingSlotState.parkingSlotNumber);
 
-    if (parkingRecord != null) _entryDate = parkingRecord.entryDate;
+    if (_entryDate == null) {
+      if (parkingRecord != null) {
+        _entryDate = parkingRecord.entryDate;
+      } else {
+        _entryDate = DateTime.now();
+      }
+    }
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -127,7 +133,7 @@ class _ParkingSlotControlPageState extends ConsumerState<ParkingSlotControlPage>
                 ),
               ),
               onTap: () async {
-                final newDate = await parkingSlotController.setDate(context, ref, _entryDate!);
+                final newDate = await parkingSlotController.setDate(context, _entryDate!);
                 if (newDate != null) {
                   setState(() {
                     _entryDate = newDate;
@@ -164,7 +170,7 @@ class _ParkingSlotControlPageState extends ConsumerState<ParkingSlotControlPage>
                   ),
                 ),
                 onTap: () async {
-                  final newDate = await parkingSlotController.setDate(context, ref, _exitDate);
+                  final newDate = await parkingSlotController.setDate(context, _exitDate);
                   if (newDate != null) {
                     setState(() {
                       _exitDate = newDate;
@@ -192,7 +198,7 @@ class _ParkingSlotControlPageState extends ConsumerState<ParkingSlotControlPage>
                         }
                         //Caso a vaga esteja indisponível, faz a retirada do veículo da vaga
                       } else {
-                        await parkingSlotController.setVehicleExit(ref, context, parkingSlotState.parkingSlotNumber);
+                        await parkingSlotController.setVehicleExit(ref, context, vehicle!.id, parkingSlotState.parkingSlotNumber, _exitDate);
                         if (context.mounted) {
                           alert.snack(context, "Veículo retirado da vaga ${widget.parkingSlotNumber}.");
                           context.pop();

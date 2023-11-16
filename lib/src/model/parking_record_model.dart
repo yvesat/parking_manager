@@ -34,8 +34,8 @@ class ParkingRecordModel {
     String? vehicleModel,
     String? vehicleLicensePlate,
     int? parkingSlotNumber,
-    DateTime? entryTime,
-    DateTime? exitTime,
+    DateTime? entryDate,
+    DateTime? exitDate,
   }) {
     return ParkingRecordModel(
       parkingRecordId: parkingRecordId ?? this.parkingRecordId,
@@ -44,8 +44,8 @@ class ParkingRecordModel {
       vehicleModel: vehicleModel ?? this.vehicleModel,
       vehicleLicensePlate: vehicleLicensePlate ?? this.vehicleLicensePlate,
       parkingSlotNumber: parkingSlotNumber ?? this.parkingSlotNumber,
-      entryDate: entryTime ?? this.entryDate,
-      exitDate: exitTime ?? this.exitDate,
+      entryDate: entryDate ?? this.entryDate,
+      exitDate: exitDate ?? this.exitDate,
     );
   }
 }
@@ -53,7 +53,7 @@ class ParkingRecordModel {
 class ParkingRecordModelNotifier extends StateNotifier<List<ParkingRecordModel>> {
   ParkingRecordModelNotifier() : super([]);
 
-  ParkingRecordModel createParkingRecord(
+  ParkingRecordModel startParkingRecord(
     int vehicleId,
     String vehicleBrand,
     String vehicleModel,
@@ -88,6 +88,15 @@ class ParkingRecordModelNotifier extends StateNotifier<List<ParkingRecordModel>>
 
   ParkingRecordModel? getParkingRecordByParkSLNUM(int parkingSlotNumber) {
     return state.firstWhereOrNull((e) => e.parkingSlotNumber == parkingSlotNumber);
+  }
+
+  ParkingRecordModel? endParkingRecord(int parkingRecordId, DateTime exitDate) {
+    state = [
+      for (final parkingRecord in state)
+        if (parkingRecord.parkingRecordId == parkingRecordId) parkingRecord.copyWith(exitDate: exitDate) else parkingRecord,
+    ];
+
+    return state.firstWhereOrNull((e) => e.parkingRecordId == parkingRecordId);
   }
 }
 
