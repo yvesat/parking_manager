@@ -30,12 +30,12 @@ class ParkingRecordTile extends HookConsumerWidget {
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 8.0),
                 child: Text(
-                  "Entrada: ${DateFormat('dd/MM/yyyy').format(parkingRecord.entryDate)}",
+                  "Entrada: ${DateFormat('dd/MM/yyyy - HH:mm').format(parkingRecord.entryDate)}",
                   overflow: TextOverflow.ellipsis,
                 ),
               ),
               Text(
-                "Saída: ${parkingRecord.exitDate != null ? DateFormat('dd/MM/yyyy').format(parkingRecord.exitDate!) : "Aberto"}",
+                "Saída: ${parkingRecord.exitDate != null ? DateFormat('dd/MM/yyyy - HH:mm').format(parkingRecord.exitDate!) : "Aberto"}",
                 overflow: TextOverflow.ellipsis,
               ),
             ],
