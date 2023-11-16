@@ -20,6 +20,10 @@ class ParkingRecordController extends StateNotifier<AsyncValue<void>> {
     return newParkingRecord.parkingRecordId;
   }
 
+  List<ParkingRecordModel> getParkingRecordState(WidgetRef ref) {
+    return ref.watch(parkingRecordProvider);
+  }
+
   ParkingRecordModel? getParkingRecordById(WidgetRef ref, int? currentParkingRecordId) {
     return ref.watch(parkingRecordProvider).firstWhereOrNull((e) => e.parkingRecordId == currentParkingRecordId);
   }
