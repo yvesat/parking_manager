@@ -9,27 +9,24 @@ class ParkingSlotModel {
   Id id = Isar.autoIncrement;
   final int parkingSlotNumber;
   final int? occupyingVehicleId;
+  final int? currentParkingRecordId;
   final bool available;
 
-  ParkingSlotModel({required this.parkingSlotNumber, this.occupyingVehicleId, this.available = true});
+  ParkingSlotModel({required this.parkingSlotNumber, this.occupyingVehicleId, this.currentParkingRecordId, this.available = true});
 
   ParkingSlotModel copyWith({
     int? parkingSlotNumber,
     int? occupyingVehicleId,
+    int? currentParkingRecordId,
     bool? available,
   }) {
     return ParkingSlotModel(
       parkingSlotNumber: parkingSlotNumber ?? this.parkingSlotNumber,
       occupyingVehicleId: occupyingVehicleId,
+      currentParkingRecordId: currentParkingRecordId,
       available: available ?? this.available,
     );
   }
-
-  @override
-  bool operator ==(Object other) => identical(this, other) || other is ParkingSlotModel && runtimeType == other.runtimeType && parkingSlotNumber == other.parkingSlotNumber && occupyingVehicleId == other.occupyingVehicleId;
-
-  @override
-  int get hashCode => parkingSlotNumber.hashCode ^ occupyingVehicleId.hashCode;
 }
 
 class ParkingSlotModelNotifier extends StateNotifier<List<ParkingSlotModel>> {
@@ -63,13 +60,14 @@ class ParkingSlotModelNotifier extends StateNotifier<List<ParkingSlotModel>> {
     return state.firstWhereOrNull((e) => e.parkingSlotNumber == parkingSlotNumber);
   }
 
-  ParkingSlotModel? editOccupyingvehicle(int parkingSlotNumber, int? occupyingVehicleId) {
+  ParkingSlotModel? editParkingSlot(int parkingSlotNumber, int? occupyingVehicleId, int? currentParkingRecordId, bool? available) {
     state = [
       for (final parkingSlotState in state)
         if (parkingSlotState.parkingSlotNumber == parkingSlotNumber)
           parkingSlotState.copyWith(
             occupyingVehicleId: occupyingVehicleId,
-            available: occupyingVehicleId != null ? false : true,
+            currentParkingRecordId: currentParkingRecordId,
+            available: available,
           )
         else
           parkingSlotState,

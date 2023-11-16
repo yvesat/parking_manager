@@ -22,9 +22,9 @@ const ParkingSlotModelSchema = CollectionSchema(
       name: r'available',
       type: IsarType.bool,
     ),
-    r'hashCode': PropertySchema(
+    r'currentParkingRecordId': PropertySchema(
       id: 1,
-      name: r'hashCode',
+      name: r'currentParkingRecordId',
       type: IsarType.long,
     ),
     r'occupyingVehicleId': PropertySchema(
@@ -68,7 +68,7 @@ void _parkingSlotModelSerialize(
   Map<Type, List<int>> allOffsets,
 ) {
   writer.writeBool(offsets[0], object.available);
-  writer.writeLong(offsets[1], object.hashCode);
+  writer.writeLong(offsets[1], object.currentParkingRecordId);
   writer.writeLong(offsets[2], object.occupyingVehicleId);
   writer.writeLong(offsets[3], object.parkingSlotNumber);
 }
@@ -81,6 +81,7 @@ ParkingSlotModel _parkingSlotModelDeserialize(
 ) {
   final object = ParkingSlotModel(
     available: reader.readBoolOrNull(offsets[0]) ?? true,
+    currentParkingRecordId: reader.readLongOrNull(offsets[1]),
     occupyingVehicleId: reader.readLongOrNull(offsets[2]),
     parkingSlotNumber: reader.readLong(offsets[3]),
   );
@@ -98,7 +99,7 @@ P _parkingSlotModelDeserializeProp<P>(
     case 0:
       return (reader.readBoolOrNull(offset) ?? true) as P;
     case 1:
-      return (reader.readLong(offset)) as P;
+      return (reader.readLongOrNull(offset)) as P;
     case 2:
       return (reader.readLongOrNull(offset)) as P;
     case 3:
@@ -213,53 +214,71 @@ extension ParkingSlotModelQueryFilter
   }
 
   QueryBuilder<ParkingSlotModel, ParkingSlotModel, QAfterFilterCondition>
-      hashCodeEqualTo(int value) {
+      currentParkingRecordIdIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'currentParkingRecordId',
+      ));
+    });
+  }
+
+  QueryBuilder<ParkingSlotModel, ParkingSlotModel, QAfterFilterCondition>
+      currentParkingRecordIdIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'currentParkingRecordId',
+      ));
+    });
+  }
+
+  QueryBuilder<ParkingSlotModel, ParkingSlotModel, QAfterFilterCondition>
+      currentParkingRecordIdEqualTo(int? value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'hashCode',
+        property: r'currentParkingRecordId',
         value: value,
       ));
     });
   }
 
   QueryBuilder<ParkingSlotModel, ParkingSlotModel, QAfterFilterCondition>
-      hashCodeGreaterThan(
-    int value, {
+      currentParkingRecordIdGreaterThan(
+    int? value, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         include: include,
-        property: r'hashCode',
+        property: r'currentParkingRecordId',
         value: value,
       ));
     });
   }
 
   QueryBuilder<ParkingSlotModel, ParkingSlotModel, QAfterFilterCondition>
-      hashCodeLessThan(
-    int value, {
+      currentParkingRecordIdLessThan(
+    int? value, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.lessThan(
         include: include,
-        property: r'hashCode',
+        property: r'currentParkingRecordId',
         value: value,
       ));
     });
   }
 
   QueryBuilder<ParkingSlotModel, ParkingSlotModel, QAfterFilterCondition>
-      hashCodeBetween(
-    int lower,
-    int upper, {
+      currentParkingRecordIdBetween(
+    int? lower,
+    int? upper, {
     bool includeLower = true,
     bool includeUpper = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
-        property: r'hashCode',
+        property: r'currentParkingRecordId',
         lower: lower,
         includeLower: includeLower,
         upper: upper,
@@ -478,16 +497,16 @@ extension ParkingSlotModelQuerySortBy
   }
 
   QueryBuilder<ParkingSlotModel, ParkingSlotModel, QAfterSortBy>
-      sortByHashCode() {
+      sortByCurrentParkingRecordId() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'hashCode', Sort.asc);
+      return query.addSortBy(r'currentParkingRecordId', Sort.asc);
     });
   }
 
   QueryBuilder<ParkingSlotModel, ParkingSlotModel, QAfterSortBy>
-      sortByHashCodeDesc() {
+      sortByCurrentParkingRecordIdDesc() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'hashCode', Sort.desc);
+      return query.addSortBy(r'currentParkingRecordId', Sort.desc);
     });
   }
 
@@ -537,16 +556,16 @@ extension ParkingSlotModelQuerySortThenBy
   }
 
   QueryBuilder<ParkingSlotModel, ParkingSlotModel, QAfterSortBy>
-      thenByHashCode() {
+      thenByCurrentParkingRecordId() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'hashCode', Sort.asc);
+      return query.addSortBy(r'currentParkingRecordId', Sort.asc);
     });
   }
 
   QueryBuilder<ParkingSlotModel, ParkingSlotModel, QAfterSortBy>
-      thenByHashCodeDesc() {
+      thenByCurrentParkingRecordIdDesc() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'hashCode', Sort.desc);
+      return query.addSortBy(r'currentParkingRecordId', Sort.desc);
     });
   }
 
@@ -602,9 +621,9 @@ extension ParkingSlotModelQueryWhereDistinct
   }
 
   QueryBuilder<ParkingSlotModel, ParkingSlotModel, QDistinct>
-      distinctByHashCode() {
+      distinctByCurrentParkingRecordId() {
     return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'hashCode');
+      return query.addDistinctBy(r'currentParkingRecordId');
     });
   }
 
@@ -637,9 +656,10 @@ extension ParkingSlotModelQueryProperty
     });
   }
 
-  QueryBuilder<ParkingSlotModel, int, QQueryOperations> hashCodeProperty() {
+  QueryBuilder<ParkingSlotModel, int?, QQueryOperations>
+      currentParkingRecordIdProperty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'hashCode');
+      return query.addPropertyName(r'currentParkingRecordId');
     });
   }
 

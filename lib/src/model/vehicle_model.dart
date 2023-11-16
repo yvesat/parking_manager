@@ -32,12 +32,6 @@ class VehicleModel {
       licensePlate: licensePlate ?? this.licensePlate,
     );
   }
-
-  @override
-  bool operator ==(Object other) => identical(this, other) || other is VehicleModel && runtimeType == other.runtimeType && vehicleId == other.vehicleId && brand == other.brand && model == other.model && licensePlate == other.licensePlate;
-
-  @override
-  int get hashCode => vehicleId.hashCode ^ brand.hashCode ^ model.hashCode ^ licensePlate.hashCode;
 }
 
 class VehicleModelNotifier extends StateNotifier<List<VehicleModel>> {

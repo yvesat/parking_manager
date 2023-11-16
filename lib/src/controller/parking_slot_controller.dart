@@ -50,12 +50,12 @@ class ParkingSlotController extends StateNotifier<AsyncValue<void>> {
 
   Future<void> setVehicleEntry(WidgetRef ref, BuildContext context, int vehicleId, int parkingSlotNumber, DateTime entryDate) async {
     try {
-      await _setVehicleEntryExit(ref, context, vehicleId, parkingSlotNumber);
       final vehicle = ref.read(vehicleProvider.notifier).getVehicleById(vehicleId);
-
       if (vehicle == null) throw Exception("Veículo não encontrado no estado da aplicação");
 
-      ref.read(parkingRecordControllerProvider.notifier).startParkingRecord(ref, vehicle, parkingSlotNumber, entryDate);
+      final newParkingRecordId = await ref.read(parkingRecordControllerProvider.notifier).startParkingRecord(ref, vehicle, parkingSlotNumber, entryDate);
+
+      if (context.mounted) await _setVehicleEntryExit(ref, context, vehicleId, parkingSlotNumber, newParkingRecordId, false);
     } catch (e) {
       if (context.mounted) alert.snack(context, e.toString());
     } finally {
@@ -64,17 +64,17 @@ class ParkingSlotController extends StateNotifier<AsyncValue<void>> {
   }
 
   Future<void> setVehicleExit(WidgetRef ref, BuildContext context, int vehicleId, int parkingSlotNumber, DateTime exitDate) async {
-    await _setVehicleEntryExit(ref, context, null, parkingSlotNumber);
     final vehicle = ref.read(vehicleProvider.notifier).getVehicleById(vehicleId);
 
     if (vehicle == null) throw Exception("Veículo não encontrado no estado da aplicação");
-
     if (context.mounted) ref.read(parkingRecordControllerProvider.notifier).editParkingRecordDate(ref, context, parkingSlotNumber, null, exitDate);
+
+    await _setVehicleEntryExit(ref, context, null, parkingSlotNumber, null, true);
   }
 
-  Future<void> _setVehicleEntryExit(WidgetRef ref, BuildContext context, int? vehicleId, int parkingSlotNumber) async {
+  Future<void> _setVehicleEntryExit(WidgetRef ref, BuildContext context, int? vehicleId, int parkingSlotNumber, int? currentParkingRecordId, bool available) async {
     try {
-      final alteredParkingSlot = ref.read(parkingSlotProvider.notifier).editOccupyingvehicle(parkingSlotNumber, vehicleId);
+      final alteredParkingSlot = ref.read(parkingSlotProvider.notifier).editParkingSlot(parkingSlotNumber, vehicleId, currentParkingRecordId, available);
       if (alteredParkingSlot == null) throw Exception("Vaga não encontrada no estado da aplicação");
       await isarService.saveParkingSlotDB(alteredParkingSlot);
     } catch (e) {

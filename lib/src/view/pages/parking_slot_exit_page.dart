@@ -29,7 +29,7 @@ class _ParkingSlotExitPageState extends ConsumerState<ParkingSlotExitPage> {
     final vehicle = vehicleController.getVehicle(ref, parkingSlotState!.occupyingVehicleId);
 
     final parkingRecordController = ref.read(parkingRecordControllerProvider.notifier);
-    final parkingRecord = ref.watch(parkingRecordControllerProvider.notifier).getParkingRecordByParkSLNUM(ref, parkingSlotState.parkingSlotNumber);
+    final parkingRecord = ref.watch(parkingRecordControllerProvider.notifier).getParkingRecordById(ref, parkingSlotState.currentParkingRecordId);
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -52,7 +52,7 @@ class _ParkingSlotExitPageState extends ConsumerState<ParkingSlotExitPage> {
                 "Registrar saída do veículo?",
               ),
             ),
-            VehicleDetailCard(vehicleId: vehicle!.vehicleId),
+            VehicleDetailCard(vehicleId: vehicle?.vehicleId),
             InkWell(
               child: Card(
                 child: Padding(
@@ -69,7 +69,7 @@ class _ParkingSlotExitPageState extends ConsumerState<ParkingSlotExitPage> {
                             ),
                             const SizedBox(height: 8),
                             Text(
-                              DateFormat('dd/MM/yyyy').format(parkingRecord!.entryDate),
+                              DateFormat('dd/MM/yyyy').format(parkingRecord?.entryDate ?? DateTime.now()),
                               style: const TextStyle(fontSize: 14),
                             ),
                           ],
@@ -81,7 +81,7 @@ class _ParkingSlotExitPageState extends ConsumerState<ParkingSlotExitPage> {
                 ),
               ),
               onTap: () async {
-                final newDate = await parkingRecordController.setDate(context, parkingRecord.entryDate);
+                final newDate = await parkingRecordController.setDate(context, parkingRecord!.entryDate);
                 if (context.mounted) await parkingRecordController.editParkingRecordDate(ref, context, parkingRecord.parkingRecordId, newDate, null);
               },
             ),
@@ -101,7 +101,7 @@ class _ParkingSlotExitPageState extends ConsumerState<ParkingSlotExitPage> {
                             ),
                             const SizedBox(height: 8),
                             Text(
-                              DateFormat('dd/MM/yyyy').format(parkingRecord.exitDate ?? DateTime.now()),
+                              DateFormat('dd/MM/yyyy').format(parkingRecord?.exitDate ?? DateTime.now()),
                               style: const TextStyle(fontSize: 14),
                             ),
                           ],
@@ -113,14 +113,14 @@ class _ParkingSlotExitPageState extends ConsumerState<ParkingSlotExitPage> {
                 ),
               ),
               onTap: () async {
-                final newDate = await parkingRecordController.setDate(context, parkingRecord.exitDate ?? DateTime.now());
+                final newDate = await parkingRecordController.setDate(context, parkingRecord!.exitDate ?? DateTime.now());
                 if (context.mounted) await parkingRecordController.editParkingRecordDate(ref, context, parkingRecord.parkingRecordId, null, newDate);
               },
             ),
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () async {
-                await parkingSlotController.setVehicleExit(ref, context, vehicle.id, parkingSlotState.parkingSlotNumber, parkingRecord.exitDate ?? DateTime.now());
+                await parkingSlotController.setVehicleExit(ref, context, vehicle!.id, parkingSlotState.parkingSlotNumber, parkingRecord!.exitDate ?? DateTime.now());
                 if (context.mounted) {
                   alert.snack(context, "Veículo retirado da vaga ${widget.parkingSlotNumber}.");
                   context.pop();

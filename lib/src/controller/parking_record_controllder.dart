@@ -13,13 +13,15 @@ class ParkingRecordController extends StateNotifier<AsyncValue<void>> {
   final Alert alert = Alert();
   final IsarService isarService = IsarService();
 
-  Future<void> startParkingRecord(WidgetRef ref, VehicleModel vehicle, int parkingSlotNumber, DateTime entryDate) async {
+  Future<int> startParkingRecord(WidgetRef ref, VehicleModel vehicle, int parkingSlotNumber, DateTime entryDate) async {
     final newParkingRecord = ref.read(parkingRecordProvider.notifier).startParkingRecord(vehicle.vehicleId, vehicle.brand, vehicle.model, vehicle.licensePlate, parkingSlotNumber, entryDate);
     await isarService.saveParkingRecordDB(newParkingRecord);
+
+    return newParkingRecord.parkingRecordId;
   }
 
-  ParkingRecordModel? getParkingRecordByParkSLNUM(WidgetRef ref, int parkingSlotNumber) {
-    return ref.watch(parkingRecordProvider).firstWhereOrNull((e) => e.parkingSlotNumber == parkingSlotNumber);
+  ParkingRecordModel? getParkingRecordById(WidgetRef ref, int? currentParkingRecordId) {
+    return ref.watch(parkingRecordProvider).firstWhereOrNull((e) => e.parkingRecordId == currentParkingRecordId);
   }
 
   Future<DateTime?> setDate(BuildContext context, DateTime currentDate) async {
