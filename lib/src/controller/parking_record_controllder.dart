@@ -20,8 +20,11 @@ class ParkingRecordController extends StateNotifier<AsyncValue<void>> {
     return newParkingRecord.parkingRecordId;
   }
 
-  List<ParkingRecordModel> getParkingRecordState(WidgetRef ref) {
-    return ref.watch(parkingRecordProvider);
+  List<ParkingRecordModel> getParkingRecordsBetweenDays(WidgetRef ref, DateTime entryDate, DateTime exitDate) {
+    return ref.watch(parkingRecordProvider).where((record) {
+      int recordDay = record.entryDate.day;
+      return recordDay >= entryDate.day && recordDay <= exitDate.day;
+    }).toList();
   }
 
   ParkingRecordModel? getParkingRecordById(WidgetRef ref, int? currentParkingRecordId) {
