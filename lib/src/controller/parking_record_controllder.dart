@@ -49,10 +49,19 @@ class ParkingRecordController extends StateNotifier<AsyncValue<void>> {
     );
 
     if (selectedTime != null) {
-      return DateTime(currentDate.year, currentDate.day, selectedTime.hour, selectedTime.minute);
+      return DateTime(currentDate.year, currentDate.month, currentDate.day, selectedTime.hour, selectedTime.minute);
     } else {
       return null;
     }
+  }
+
+  bool timeDateValidation(DateTime entryDate, DateTime? exitDate) {
+    if (exitDate == null) return false;
+
+    final entryDateCheck = DateTime(entryDate.year, entryDate.month, entryDate.day, entryDate.hour, entryDate.minute);
+    final exitDateCheck = DateTime(exitDate.year, exitDate.month, exitDate.day, exitDate.hour, exitDate.minute);
+
+    return entryDateCheck.isBefore(exitDateCheck);
   }
 
   Future<void> editParkingRecordDate(WidgetRef ref, BuildContext context, int parkingRecordId, DateTime? entryDate, DateTime? exitDate) async {

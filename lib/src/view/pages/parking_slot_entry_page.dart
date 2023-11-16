@@ -44,114 +44,152 @@ class _ParkingSlotEntryPageState extends ConsumerState<ParkingSlotEntryPage> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Text(
-              "Vaga Disponível",
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18, color: Colors.green),
-            ),
-            const Padding(
-              padding: EdgeInsets.symmetric(vertical: 16),
-              child: Text(
-                "Registrar entrada do veículo?",
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Text(
+                "Vaga Disponível",
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18, color: Colors.green),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 24.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Autocomplete<VehicleModel>(
-                    displayStringForOption: _displayStringForOption,
-                    optionsBuilder: (TextEditingValue textEditingValue) {
-                      if (textEditingValue.text == '') {
-                        return const Iterable<VehicleModel>.empty();
-                      }
-                      return vehicleState.where((VehicleModel option) {
-                        return option.licensePlate.contains(textEditingValue.text.toUpperCase());
-                      });
-                    },
-                    onSelected: (VehicleModel selection) async {
-                      SystemChannels.textInput.invokeMethod('TextInput.hide');
-
-                      setState(() {
-                        _selectedVehicleId = selection.vehicleId;
-                      });
-                    },
-                  ),
-                  const SizedBox(height: 8),
-                  const Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      FaIcon(FontAwesomeIcons.magnifyingGlass, size: 16),
-                      SizedBox(width: 8),
-                      Text("Pesquisa por placa"),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-            VehicleDetailCard(vehicleId: _selectedVehicleId),
-            InkWell(
-              child: Card(
-                child: Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const Text(
-                              "Data da Entrada: ",
-                              style: TextStyle(fontSize: 12),
-                            ),
-                            const SizedBox(height: 8),
-                            Text(
-                              DateFormat('dd/MM/yyyy').format(_entryDate),
-                              style: const TextStyle(fontSize: 14),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Icon(Icons.calendar_today, color: Theme.of(context).colorScheme.primary),
-                    ],
-                  ),
+              const Padding(
+                padding: EdgeInsets.symmetric(vertical: 16),
+                child: Text(
+                  "Registrar entrada do veículo?",
                 ),
               ),
-              onTap: () async {
-                final newDate = await parkingRecordController.setDate(context, _entryDate);
-                if (newDate != null) {
-                  setState(() {
-                    _entryDate = newDate;
-                  });
-                }
-              },
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: _selectedVehicleId != null
-                  ? () async {
-                      final vehicleParkedAtSlot = parkingSlotController.isVehiceParked(ref, _selectedVehicleId!);
-                      if (vehicleParkedAtSlot == null) {
-                        await parkingSlotController.setVehicleEntry(ref, context, _selectedVehicleId!, parkingSlotState!.parkingSlotNumber, _entryDate);
-                        if (context.mounted) {
-                          alert.snack(context, "Veículo alocado a vaga ${widget.parkingSlotNumber}.");
-                          context.pop();
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 24.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Autocomplete<VehicleModel>(
+                      displayStringForOption: _displayStringForOption,
+                      optionsBuilder: (TextEditingValue textEditingValue) {
+                        if (textEditingValue.text == '') {
+                          return const Iterable<VehicleModel>.empty();
                         }
-                      } else {
-                        if (context.mounted) alert.snack(context, "Veículo já está estacionado na vaga ${vehicleParkedAtSlot.parkingSlotNumber}.");
-                      }
-                    }
-                  : null,
-              child: const Padding(
-                padding: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-                child: Text('Registrar Entrada'),
+                        return vehicleState.where((VehicleModel option) {
+                          return option.licensePlate.contains(textEditingValue.text.toUpperCase());
+                        });
+                      },
+                      onSelected: (VehicleModel selection) async {
+                        SystemChannels.textInput.invokeMethod('TextInput.hide');
+
+                        setState(() {
+                          _selectedVehicleId = selection.vehicleId;
+                        });
+                      },
+                    ),
+                    const SizedBox(height: 8),
+                    const Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        FaIcon(FontAwesomeIcons.magnifyingGlass, size: 16),
+                        SizedBox(width: 8),
+                        Text("Pesquisa por placa"),
+                      ],
+                    ),
+                  ],
+                ),
               ),
-            ),
-          ],
+              VehicleDetailCard(vehicleId: _selectedVehicleId),
+              InkWell(
+                child: Card(
+                  child: Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text(
+                                "Data da Entrada: ",
+                                style: TextStyle(fontSize: 12),
+                              ),
+                              const SizedBox(height: 8),
+                              Text(
+                                DateFormat('dd/MM/yyyy').format(_entryDate),
+                                style: const TextStyle(fontSize: 14),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Icon(Icons.calendar_today, color: Theme.of(context).colorScheme.primary),
+                      ],
+                    ),
+                  ),
+                ),
+                onTap: () async {
+                  final newDate = await parkingRecordController.setDate(context, _entryDate);
+                  if (newDate != null) {
+                    setState(() {
+                      _entryDate = newDate;
+                    });
+                  }
+                },
+              ),
+              InkWell(
+                child: Card(
+                  child: Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text(
+                                "Hora da Entrada: ",
+                                style: TextStyle(fontSize: 12),
+                              ),
+                              const SizedBox(height: 8),
+                              Text(
+                                DateFormat('HH:mm').format(_entryDate),
+                                style: const TextStyle(fontSize: 14),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Icon(FontAwesomeIcons.clock, color: Theme.of(context).colorScheme.primary),
+                      ],
+                    ),
+                  ),
+                ),
+                onTap: () async {
+                  final newDate = await parkingRecordController.setTime(context, _entryDate);
+                  if (newDate != null) {
+                    setState(() {
+                      _entryDate = newDate;
+                    });
+                  }
+                },
+              ),
+              const SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: _selectedVehicleId != null
+                    ? () async {
+                        final vehicleParkedAtSlot = parkingSlotController.isVehiceParked(ref, _selectedVehicleId!);
+                        if (vehicleParkedAtSlot == null) {
+                          await parkingSlotController.setVehicleEntry(ref, context, _selectedVehicleId!, parkingSlotState!.parkingSlotNumber, _entryDate);
+                          if (context.mounted) {
+                            alert.snack(context, "Veículo alocado a vaga ${widget.parkingSlotNumber}.");
+                            context.pop();
+                          }
+                        } else {
+                          if (context.mounted) alert.snack(context, "Veículo já está estacionado na vaga ${vehicleParkedAtSlot.parkingSlotNumber}.");
+                        }
+                      }
+                    : null,
+                child: const Padding(
+                  padding: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                  child: Text('Registrar Entrada'),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

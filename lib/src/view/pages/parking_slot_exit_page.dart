@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
@@ -39,99 +40,170 @@ class _ParkingSlotExitPageState extends ConsumerState<ParkingSlotExitPage> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Text(
-              "Vaga Ocupada",
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18, color: Colors.red),
-            ),
-            const Padding(
-              padding: EdgeInsets.symmetric(vertical: 16),
-              child: Text(
-                "Registrar saída do veículo?",
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Text(
+                "Vaga Ocupada",
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18, color: Colors.red),
               ),
-            ),
-            VehicleDetailCard(vehicleId: vehicle?.vehicleId),
-            InkWell(
-              child: Card(
-                child: Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const Text(
-                              "Data da Entrada: ",
-                              style: TextStyle(fontSize: 12),
-                            ),
-                            const SizedBox(height: 8),
-                            Text(
-                              DateFormat('dd/MM/yyyy').format(parkingRecord?.entryDate ?? DateTime.now()),
-                              style: const TextStyle(fontSize: 14),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Icon(Icons.calendar_today, color: Theme.of(context).colorScheme.primary),
-                    ],
-                  ),
+              const Padding(
+                padding: EdgeInsets.symmetric(vertical: 16),
+                child: Text(
+                  "Registrar saída do veículo?",
                 ),
               ),
-              onTap: () async {
-                final newDate = await parkingRecordController.setDate(context, parkingRecord!.entryDate);
-                if (context.mounted) await parkingRecordController.editParkingRecordDate(ref, context, parkingRecord.parkingRecordId, newDate, null);
-              },
-            ),
-            InkWell(
-              child: Card(
-                child: Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const Text(
-                              "Data da Saída: ",
-                              style: TextStyle(fontSize: 12),
-                            ),
-                            const SizedBox(height: 8),
-                            Text(
-                              DateFormat('dd/MM/yyyy').format(parkingRecord?.exitDate ?? DateTime.now()),
-                              style: const TextStyle(fontSize: 14),
-                            ),
-                          ],
+              VehicleDetailCard(vehicleId: vehicle?.vehicleId),
+              InkWell(
+                child: Card(
+                  child: Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text(
+                                "Data da Entrada: ",
+                                style: TextStyle(fontSize: 12),
+                              ),
+                              const SizedBox(height: 8),
+                              Text(
+                                DateFormat('dd/MM/yyyy').format(parkingRecord?.entryDate ?? DateTime.now()),
+                                style: const TextStyle(fontSize: 14),
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-                      Icon(Icons.calendar_today, color: Theme.of(context).colorScheme.primary),
-                    ],
+                        Icon(Icons.calendar_today, color: Theme.of(context).colorScheme.primary),
+                      ],
+                    ),
                   ),
                 ),
+                onTap: () async {
+                  final newDate = await parkingRecordController.setDate(context, parkingRecord!.entryDate);
+                  if (context.mounted) await parkingRecordController.editParkingRecordDate(ref, context, parkingRecord.parkingRecordId, newDate, null);
+                },
               ),
-              onTap: () async {
-                final newDate = await parkingRecordController.setDate(context, parkingRecord!.exitDate ?? DateTime.now());
-                if (context.mounted) await parkingRecordController.editParkingRecordDate(ref, context, parkingRecord.parkingRecordId, null, newDate);
-              },
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () async {
-                await parkingSlotController.setVehicleExit(ref, context, vehicle!.id, parkingSlotState.parkingSlotNumber, parkingRecord!.exitDate ?? DateTime.now());
-                if (context.mounted) {
-                  alert.snack(context, "Veículo retirado da vaga ${widget.parkingSlotNumber}.");
-                  context.pop();
-                }
-              },
-              child: const Padding(
-                padding: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-                child: Text('Registrar Saída'),
+              InkWell(
+                child: Card(
+                  child: Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text(
+                                "Hora da Entrada: ",
+                                style: TextStyle(fontSize: 12),
+                              ),
+                              const SizedBox(height: 8),
+                              Text(
+                                DateFormat('HH:mm').format(parkingRecord?.entryDate ?? DateTime.now()),
+                                style: const TextStyle(fontSize: 14),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Icon(FontAwesomeIcons.clock, color: Theme.of(context).colorScheme.primary),
+                      ],
+                    ),
+                  ),
+                ),
+                onTap: () async {
+                  final newDate = await parkingRecordController.setTime(context, parkingRecord?.entryDate ?? DateTime.now());
+                  if (context.mounted) await parkingRecordController.editParkingRecordDate(ref, context, parkingRecord!.parkingRecordId, newDate, null);
+                },
               ),
-            ),
-          ],
+              InkWell(
+                child: Card(
+                  child: Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text(
+                                "Data da Saída: ",
+                                style: TextStyle(fontSize: 12),
+                              ),
+                              const SizedBox(height: 8),
+                              Text(
+                                DateFormat('dd/MM/yyyy').format(parkingRecord?.exitDate ?? DateTime.now()),
+                                style: const TextStyle(fontSize: 14),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Icon(Icons.calendar_today, color: Theme.of(context).colorScheme.primary),
+                      ],
+                    ),
+                  ),
+                ),
+                onTap: () async {
+                  final newDate = await parkingRecordController.setDate(context, parkingRecord!.exitDate ?? DateTime.now());
+                  if (context.mounted) await parkingRecordController.editParkingRecordDate(ref, context, parkingRecord.parkingRecordId, null, newDate);
+                },
+              ),
+              InkWell(
+                child: Card(
+                  child: Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text(
+                                "Hora da Saída: ",
+                                style: TextStyle(fontSize: 12),
+                              ),
+                              const SizedBox(height: 8),
+                              Text(
+                                DateFormat('HH:mm').format(parkingRecord?.exitDate ?? DateTime.now()),
+                                style: const TextStyle(fontSize: 14),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Icon(FontAwesomeIcons.clock, color: Theme.of(context).colorScheme.primary),
+                      ],
+                    ),
+                  ),
+                ),
+                onTap: () async {
+                  final newDate = await parkingRecordController.setTime(context, parkingRecord?.exitDate ?? DateTime.now());
+                  if (context.mounted) await parkingRecordController.editParkingRecordDate(ref, context, parkingRecord!.parkingRecordId, null, newDate);
+                },
+              ),
+              const SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: () async {
+                  final validTime = parkingRecordController.timeDateValidation(parkingRecord!.entryDate, parkingRecord.exitDate);
+                  if (validTime) {
+                    await parkingSlotController.setVehicleExit(ref, context, vehicle!.id, parkingSlotState.parkingSlotNumber, parkingRecord.exitDate ?? DateTime.now());
+                    if (context.mounted) {
+                      alert.snack(context, "Veículo retirado da vaga ${widget.parkingSlotNumber}.");
+                      context.pop();
+                    }
+                  } else {
+                    alert.snack(context, "Data ou horário inválido.");
+                  }
+                },
+                child: const Padding(
+                  padding: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                  child: Text('Registrar Saída'),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
