@@ -17,7 +17,6 @@ Parking Manager is a Flutter app designed to streamline parking lot management. 
 - [isar](https://pub.dev/packages/isar) - A high-performance, lightweight NoSQL database.
 - [isar_flutter_libs](https://pub.dev/packages/isar_flutter_libs) - Flutter integration for Isar.
 - [collection](https://pub.dev/packages/collection) - Additional collection classes.
-- [uuid](https://pub.dev/packages/uuid) - Generates unique identifiers (UUIDs).
 - [intl](https://pub.dev/packages/intl) - Provides internationalization and localization support.
 - [go_router](https://pub.dev/packages/go_router) - A flexible and easy-to-use Flutter router.
 - [font_awesome_flutter](https://pub.dev/packages/font_awesome_flutter) - Utilizes Font Awesome icons for visual elements.
